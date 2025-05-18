@@ -79,7 +79,14 @@ export default function HeroSection() {
             top-[170px] left-[20px] w-[90%] sm:hidden
           "
         />
-
+<img
+  src="/photo-maika.png"
+  alt="Жена с чертежи"
+  className="
+    absolute rounded-xl object-cover
+    top-[710px] left-[20px] w-[90%] sm:hidden
+  "
+/>
         {/* === СГРАДА ДЯСНО === */}
         <img
           src="/photo-left.png"
@@ -97,14 +104,6 @@ export default function HeroSection() {
             top-[440px] left-[20px] w-[90%] sm:hidden
           "
         />
-<img
-  src="/photo-maika.png"
-  alt="Жена с чертежи"
-  className="
-    absolute rounded-xl object-cover
-    top-[860px] left-[20px] w-[90%] sm:hidden
-  "
-/>
 
         {/* === ЕМБЛЕМА 1994 === */}
         <img
