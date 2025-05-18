@@ -7,7 +7,7 @@ export default function Footer() {
   return (
     <>
       {/* === Десктоп футър (НЕПИПАН) === */}
-      <footer className="hidden md:flex relative bg-stone-300 text-black text-xs font-normal font-sans w-full h-10 items-center justify-between px-4 py-2 text-[10px]">
+      <footer className="hidden md:flex relative bg-stone-300 text-black  font-normal font-sans w-full h-10 items-center justify-between px-4 py-2 text-[10px]">
         {/* === Лява част: права === */}
         <div className="text-[8px] leading-none">
           © {new Date().getFullYear()} ЕРМА – ФАМИЛНА ООД. Всички права запазени.
