@@ -18,15 +18,15 @@ export default function HeroSection() {
         </div>
 
         {/* === МОБИЛНО ЗАГЛАВИЕ – РЕД 1 === */}
-<div className="absolute top-[30px] left-[30px] w-[90%] sm:hidden">
-  <h1 className="text-2xl font-normal font-heading text-black leading-none">
+<div className="absolute top-[30px] left-[45px] w-[90%] sm:hidden">
+  <h1 className="text-[20px] font-normal font-heading text-black leading-none">
     Строим дома, в който
   </h1>
 </div>
 
 {/* === РЕД 2 === */}
-<div className="absolute top-[60px] left-[10px] w-[95%] sm:hidden">
-  <h1 className="text-2xl font-normal font-heading text-black leading-none">
+<div className="absolute top-[60px] left-[40px] w-[90%] sm:hidden">
+  <h1 className="text-[20px] font-normal font-heading text-black leading-none">
     мечтаеш да се прибереш.
   </h1>
 </div>
@@ -102,7 +102,7 @@ export default function HeroSection() {
   alt="Жена с чертежи"
   className="
     absolute rounded-xl object-cover
-    top-[710px] left-[20px] w-[90%] sm:hidden
+    top-[860px] left-[20px] w-[90%] sm:hidden
   "
 />
 
