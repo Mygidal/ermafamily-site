@@ -26,7 +26,7 @@ export default function HeroSection() {
 </div>
 
 {/* === РЕД 2 === */}
-<div className="absolute top-[60px] left-[20px] w-[90%] sm:hidden">
+<div className="absolute top-[60px] left-[20px] w-[95%] sm:hidden">
   <h1 className="text-[20px] font-normal font-heading text-black leading-none">
     мечтаеш да се прибереш.
   </h1>
