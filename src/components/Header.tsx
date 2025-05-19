@@ -31,7 +31,9 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 w-full h-[80px] bg-[#f4f1ec] z-50 border-b border-blue-100">
+    <header className="fixed top-0 left-0 w-full h-[64px] sm:h-[80px] bg-[#f4f1ec] z-50 border-b border-blue-100">
+
+
       <div className="w-full flex items-center justify-between h-full px-4 sm:hidden">
         {/* Ляво: емблема 1994 */}
         <img
