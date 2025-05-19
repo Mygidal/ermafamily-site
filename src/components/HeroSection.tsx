@@ -19,14 +19,14 @@ export default function HeroSection() {
         </div>
 
         {/* === МОБИЛНО ЗАГЛАВИЕ – РЕД 1 === */}
-<div className="absolute top-[30px] left-[45px] w-[90%] sm:hidden">
+<div className="absolute top-[30px] left-[30px] w-[90%] sm:hidden">
   <h1 className="text-[20px] font-normal font-heading text-black leading-none">
     Строим дома, в който
   </h1>
 </div>
 
 {/* === РЕД 2 === */}
-<div className="absolute top-[60px] left-[40px] w-[90%] sm:hidden">
+<div className="absolute top-[60px] left-[20px] w-[90%] sm:hidden">
   <h1 className="text-[20px] font-normal font-heading text-black leading-none">
     мечтаеш да се прибереш.
   </h1>
@@ -49,14 +49,14 @@ export default function HeroSection() {
         </div>
 
        {/* === РЕД 3 === */}
-<div className="absolute top-[100px] left-[40px] w-[90%] sm:hidden">
+<div className="absolute top-[100px] left-[30px] w-[90%] sm:hidden">
   <p className="text-1xl font-normal font-heading text-black leading-tight">
     Строителство с 
   </p>
 </div>
 
 {/* === РЕД 4 === */}
-<div className="absolute top-[120px] left-[110px] w-[90%] sm:hidden">
+<div className="absolute top-[120px] left-[60px] w-[90%] sm:hidden">
   <p className="text-1xl font-normal font-heading text-black leading-tight">
     български екип и сърце.
   </p>
@@ -77,7 +77,7 @@ export default function HeroSection() {
           alt="Сграда ляво мобилен"
           className="
             absolute rounded-xl object-cover
-            top-[170px] left-[20px] w-[90%] sm:hidden
+            top-[170px] left-[18px] w-[90%] sm:hidden
           "
         />
 <img
@@ -85,7 +85,7 @@ export default function HeroSection() {
   alt="Жена с чертежи"
   className="
     absolute rounded-xl object-cover
-    top-[710px] left-[20px] w-[90%] sm:hidden
+    top-[710px] left-[18px] w-[90%] sm:hidden
   "
 />
         {/* === СГРАДА ДЯСНО === */}
@@ -102,7 +102,7 @@ export default function HeroSection() {
           alt="Сграда дясно мобилен"
           className="
             absolute rounded-xl object-cover
-            top-[440px] left-[20px] w-[90%] sm:hidden
+            top-[440px] left-[18px] w-[90%] sm:hidden
           "
         />
 
