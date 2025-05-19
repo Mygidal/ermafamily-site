@@ -57,97 +57,69 @@ export default function Header() {
             <Image src="/icon-instagram.png" alt="Instagram" width={28} height={28} className="w-7 h-7" />
           </button>
         </div>
-{/* === Мобилен хедър съдържание === */}
-<div className="absolute sm:hidden w-full flex items-center justify-between px-4 top-0 h-[80px] z-[30]">
+{/* === МОБИЛЕН ХЕДЪР === */}
+<div className="sm:hidden w-full h-[80px] px-4 bg-[#f4f1ec]/80 backdrop-blur-md border-b border-blue-100 flex items-center justify-between z-[50]">
 
-  {/* Лого (абсолютно, но визуално вляво) */}
-  <img
-    src="/logo-erma.png"
-    alt="ЕРМА"
-    style={{
-      position: 'absolute',
-      top: '-25px',
-      left: '140px',
-      width: '60px',
-      height: 'auto',
-      objectFit: 'contain',
-      zIndex: 30,
-    }}
-  />
+  {/* Ляво: 1994 емблема */}
+  <div className="flex items-center">
+    <img
+      src="/badge-1994-cleaned.svg"
+      alt="1994"
+      className="w-[70px] h-auto object-contain"
+    />
+  </div>
 
-  {/* Емблема 1994 (абсолютно, централно или според нужда) */}
-  <img
-    src="/badge-1994.png"
-    alt="1994"
-    style={{
-      position: 'absolute',
-      top: '-63px',
-      left: 'calc(50% - 340px)',
-      width: '370px',
-      height: 'auto',
-      objectFit: 'contain',
-      zIndex: 30,
-    }}
-  />
+  {/* Център: Лого */}
+  <div className="flex items-center justify-center">
+    <img
+      src="/logo-erma-mobil.png"
+      alt="ЕРМА"
+      className="w-[120px] h-auto object-contain"
+    />
+  </div>
 
- {/* === Мобилен: Език + Бургер (позиционирани в Header) === */}
-<div className="absolute sm:hidden top-[-45px] right-5 h-[64px] flex items-center gap-3 px-4 z-[50]">
-
- {/* === ЕЗИК БУТОН + ПАДАЩ ПАНЕЛ === */}
-<div className="relative mt-[33px]" ref={langRef}>
-  <button onClick={() => setLangOpen(!langOpen)} aria-label="Език">
-    <Image src="/flag-bg.png" alt="BG" width={28} height={28} />
-  </button>
-
-  {langOpen && (
-    <div className="absolute top-[40px] right-0 bg-white shadow-md rounded-lg p-2 flex flex-col gap-2 items-center
- z-[999] min-w-[50px]">
-
-      <button aria-label="EN">
-        <Image src="/flag-en.png" alt="EN" width={28} height={28} />
+  {/* Дясно: Език + Меню */}
+  <div className="flex items-center gap-3">
+    {/* Език бутон */}
+    <div className="relative" ref={langRef}>
+      <button onClick={() => setLangOpen(!langOpen)} aria-label="Език">
+        <Image src="/flag-bg.png" alt="BG" width={28} height={28} />
       </button>
-      <button aria-label="DE">
-        <Image src="/flag-de.png" alt="DE" width={28} height={28} />
-      </button>
+      {langOpen && (
+        <div className="absolute top-[40px] right-0 bg-white shadow-md rounded-lg p-2 flex flex-col gap-2 items-center z-[999] min-w-[50px]">
+          <Image src="/flag-en.png" alt="EN" width={28} height={28} />
+          <Image src="/flag-de.png" alt="DE" width={28} height={28} />
+        </div>
+      )}
     </div>
-  )}
-</div>
 
-
-  {/* Меню бутон */}
-  <div className="relative" ref={menuRef}>
-    <button onClick={() => setMenuOpen(!menuOpen)} aria-label="Меню"className="mt-[35px]">
-      <svg className="w-7 h-7 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-      </svg>
-    </button>
-
-    {menuOpen && (
-  <div className="absolute top-[80px] right-0 w-[90vw] bg-white border border-blue-100 shadow-md z-[999] px-4 py-4 rounded-xl">
-    <nav>
-      <ul className="flex flex-col gap-3">
-        {navLinks.map((label) => (
-          <li key={label}>
-            <Link
-              href="#"
-              className="block border border-blue-900 px-4 py-2 rounded-full text-center text-sm font-medium"
-            >
-              {label}
-            </Link>
-          </li>
-        ))}
-      </ul>
-
-     
-    </nav>
-  </div>
-)}
-
+    {/* Меню бутон */}
+    <div className="relative" ref={menuRef}>
+      <button onClick={() => setMenuOpen(!menuOpen)} aria-label="Меню">
+        <svg className="w-7 h-7 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+      {menuOpen && (
+        <div className="absolute top-[50px] right-0 w-[90vw] bg-white border border-blue-100 shadow-md z-[999] px-4 py-4 rounded-xl">
+          <ul className="flex flex-col gap-3">
+            {navLinks.map((label) => (
+              <li key={label}>
+                <Link
+                  href="#"
+                  className="block border border-blue-900 px-4 py-2 rounded-full text-center text-sm font-medium"
+                >
+                  {label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
   </div>
 </div>
 
-
-</div>
 
 
       

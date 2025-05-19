@@ -6,7 +6,8 @@ import Image from 'next/image';
 
 export default function HeroSection() {
   return (
-    <section className="relative w-full min-h-[1100px] text-blue-900 pt-[80px] overflow-hidden">
+    <section className="relative w-full min-h-[1100px] text-blue-900 pt-[80px]">
+
       <div className="relative w-full max-w-[1600px] mx-auto h-full">
 
         {/* === ЗАГЛАВИЕ 1 === */}
@@ -107,11 +108,11 @@ export default function HeroSection() {
 
         {/* === ЕМБЛЕМА 1994 === */}
         <img
-          src="/badge-1994.png"
+          src="/badge-1994.svg"
           alt="1994"
           className="
             absolute object-contain
-            top-[260px] left-[150px] w-[1300px] hidden sm:block
+            top-[360px] left-[650px] w-[300px] hidden sm:block
           "
         />
        
