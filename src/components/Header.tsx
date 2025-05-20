@@ -41,59 +41,65 @@ export default function Header() {
     <header className="fixed top-0 left-0 w-full h-[54px] md:h-[80px] bg-[#f4f1ec] z-50 border-b border-blue-100">
       
       {/* === МОБИЛЕН + ТАБЛЕТ ХЕДЪР === */}
-      <div className="w-full flex items-center justify-between h-full px-4 lg:hidden">
-        <img
-          src="/badge-1994-cleaned.svg"
-          alt="1994"
-          className="h-[38px] w-auto object-contain translate-y-[-2px] mr-[8px]"
-        />
+<div className="w-full flex items-center justify-between h-full px-4 lg:hidden">
+  <img
+    src="/badge-1994-cleaned.svg"
+    alt="1994"
+    className="h-[38px] w-auto object-contain translate-y-[-2px] mr-[8px]"
+  />
 
-        <img
-          src="/logo-erma-header.svg"
-          alt="ЕРМА"
-          className="h-[45px] w-auto object-contain translate-y-[1px] ml-[20px]"
-        />
-
-        <div className="flex items-center gap-3">
-          <div className="relative" ref={langRef}>
-            <button onClick={() => setLangOpen(!langOpen)} aria-label="Език">
-              <Image src="/flag-bg.png" alt="BG" width={24} height={24} />
-            </button>
-            {langOpen && (
-              <div className="absolute top-[40px] right-0 bg-white shadow-md rounded-lg p-2 flex flex-col gap-2 items-center z-[999] min-w-[50px]">
-                <Image src="/flag-en.png" alt="EN" width={24} height={24} />
-                <Image src="/flag-de.png" alt="DE" width={24} height={24} />
-              </div>
-            )}
-          </div>
-
-          <div className="relative" ref={menuRef}>
-            <button onClick={() => setMenuOpen(!menuOpen)} aria-label="Меню">
-              <svg className="w-7 h-7 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-            {menuOpen && (
-              <div className="absolute top-[50px] right-0 w-[90vw] bg-white border border-blue-100 shadow-md z-[999] px-4 py-4 rounded-xl">
-                <ul className="flex flex-col gap-3">
-                  {navLinks.map(({ label, path }) => (
-                    <li key={path}>
-                      <Link
-  href={path}
-  onClick={() => setMenuOpen(false)}
-  className="block border border-blue-900 px-4 py-2 rounded-full text-center text-sm font-medium"
->
-  {label}
+  <Link href="/" aria-label="Начало">
+  <img
+    src="/logo-erma-header.svg"
+    alt="ЕРМА"
+    className="h-[45px] w-auto object-contain translate-y-[1px] ml-[20px]"
+  />
 </Link>
 
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
+
+  {/* ЕЗИК + МЕНЮ БУТОНИ */}
+  <div className="flex flex-wrap items-center gap-2 shrink-0 ml-auto">
+    {/* ЕЗИК */}
+    <div className="relative shrink-0" ref={langRef}>
+      <button onClick={() => setLangOpen(!langOpen)} aria-label="Език">
+        <Image src="/flag-bg.png" alt="BG" width={24} height={24} />
+      </button>
+      {langOpen && (
+        <div className="absolute top-[40px] right-0 bg-white shadow-md rounded-lg p-2 flex flex-col gap-2 items-center z-[999] min-w-[50px]">
+          <Image src="/flag-en.png" alt="EN" width={24} height={24} />
+          <Image src="/flag-de.png" alt="DE" width={24} height={24} />
         </div>
-      </div>
+      )}
+    </div>
+
+    {/* МЕНЮ */}
+    <div className="relative shrink-0" ref={menuRef}>
+      <button onClick={() => setMenuOpen(!menuOpen)} aria-label="Меню">
+        <svg className="w-7 h-7 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+      {menuOpen && (
+        <div className="absolute top-[50px] right-0 w-[90vw] bg-white border border-blue-100 shadow-md z-[999] px-4 py-4 rounded-xl">
+          <ul className="flex flex-col gap-3">
+            {navLinks.map(({ label, path }) => (
+              <li key={path}>
+                <Link
+                  href={path}
+                  onClick={() => setMenuOpen(false)}
+                  className="block border border-blue-900 px-4 py-2 rounded-full text-center text-sm font-medium"
+                >
+                  {label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  </div>
+</div>
+
 
       {/* === ДЕСКТОП ХЕДЪР === */}
       <div className="hidden lg:flex w-full max-w-[1280px] mx-auto items-center justify-between px-4 h-full">
