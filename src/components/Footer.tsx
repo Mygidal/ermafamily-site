@@ -13,10 +13,10 @@ export default function Footer() {
         <div className="flex gap-4">
           <a
   href="https://www.facebook.com/profile.php?id=61564031771496"
-  aria-label="Facebook"
-  target="_blank"
-  rel="noopener noreferrer"
->
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Facebook"
+  >
   <Image
     src="/icon-facebook.png"
     alt="Facebook"
