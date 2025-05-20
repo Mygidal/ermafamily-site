@@ -49,7 +49,14 @@
         <div className="flex-1 text-sm text-gray-700 space-y-4">
           <div>
             <h3 className="font-bold text-base text-blue-900">Адрес</h3>
-            <p>София, кв. „Овча купел“, ул. 692, №12</p>
+            <a
+              href="https://www.google.bg/maps/place/кв.+Овча+купел,+ул.+„692-ра“+12,+1618+София/@42.6777594,23.2508653,799m/data=!3m2!1e3!4b1!4m6!3m5!1s0x40aa9b2fe0506391:0x58036b9c19288a11!8m2!3d42.6777556!4d23.2557362"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline text-blue-800"
+            >
+              София, кв. „Овча купел“, ул. 692, №12
+            </a>
           </div>
           <div>
             <h3 className="font-bold text-base text-blue-900">Телефон</h3>
