@@ -2,120 +2,82 @@
 'use client';
 import Image from 'next/image';
 
-'use client';
-
 export default function HeroSection() {
   return (
-    <section className="relative w-full min-h-[1100px] text-blue-900 pt-[80px]">
+    <section className="w-full text-blue-900 pt-[80px]">
+      {/* === МОБИЛЕН + ТАБЛЕТ === */}
+      <div className="flex flex-col gap-6 px-4 2xl:hidden max-w-[1280px] mx-auto">
+        {/* Текстов блок */}
+        <div className="flex flex-col items-center text-center gap-[2px]">
 
-      <div className="relative w-full max-w-[1600px] mx-auto h-full">
-
-        {/* === ЗАГЛАВИЕ 1 === */}
-        {/* Десктоп */}
-        <div className="absolute top-[50px] left-[270px] w-[900px] hidden sm:block">
-          <h1 className="text-6xl font-normal font-heading text-black leading-none">
-            Строим дома,
+          <h1 className="text-[20px] font-normal font-heading text-black leading-[1.2]">
+            Строим дома, в който
           </h1>
-        </div>
-
-        {/* === МОБИЛНО ЗАГЛАВИЕ – РЕД 1 === */}
-<div className="absolute top-[30px] left-[30px] w-[90%] sm:hidden">
-  <h1 className="text-[20px] font-normal font-heading text-black leading-none">
-    Строим дома, в който
-  </h1>
-</div>
-
-{/* === РЕД 2 === */}
-<div className="absolute top-[60px] left-[20px] w-[95%] sm:hidden">
-  <h1 className="text-[20px] font-normal font-heading text-black leading-none">
-    мечтаеш да се прибереш.
-  </h1>
-</div>
-
-        {/* === ЗАГЛАВИЕ 2 === */}
-        <div className="absolute top-[120px] left-[110px] w-[1400px] hidden sm:block">
-          <h1 className="text-6xl font-normal font-heading text-black leading-none">
-            в който мечтаеш да се прибереш.
+          <h1 className="text-[20px] font-normal font-heading text-black leading-[1.2] mt-[-2px]">
+            мечтаеш да се прибереш.
           </h1>
-        </div>
-
-        
-
-        {/* === ПОДЗАГЛАВИЕ === */}
-        <div className="absolute top-[240px] left-[700px] w-[1000px] hidden sm:block">
-          <p className="text-4xl font-normal font-heading text-black leading-tight whitespace-nowrap">
+          <p className="text-[16px] font-normal font-heading text-black leading-tight pt-1">
             Строителство с български екип и сърце.
           </p>
         </div>
 
-       {/* === РЕД 3 === */}
-<div className="absolute top-[100px] left-[30px] w-[90%] sm:hidden">
-  <p className="text-1xl font-normal font-heading text-black leading-tight">
-    Строителство с 
-  </p>
-</div>
-
-{/* === РЕД 4 === */}
-<div className="absolute top-[120px] left-[60px] w-[90%] sm:hidden">
-  <p className="text-1xl font-normal font-heading text-black leading-tight">
-    български екип и сърце.
-  </p>
-</div>
-
-        {/* === СГРАДА ЛЯВО === */}
-        <img
-          src="/photo-right.png"
-          alt="Сграда ляво"
-          className="
-            absolute rounded-xl object-cover
-            top-[280px] left-[0px] w-[600px] hidden sm:block
-            sm:top-[280px] sm:left-[0px]
-          "
-        />
-        <img
+        {/* Снимки */}
+        <Image
           src="/photo-right.png"
           alt="Сграда ляво мобилен"
-          className="
-            absolute rounded-xl object-cover
-            top-[170px] left-[18px] w-[90%] sm:hidden
-          "
+          width={800}
+          height={600}
+          className="rounded-xl object-cover w-full"
         />
-<img
-  src="/photo-maika.png"
-  alt="Жена с чертежи"
-  className="
-    absolute rounded-xl object-cover
-    top-[710px] left-[18px] w-[90%] sm:hidden
-  "
-/>
-        {/* === СГРАДА ДЯСНО === */}
-        <img
-          src="/photo-left.png"
-          alt="Сграда дясно"
-          className="
-            absolute rounded-xl object-cover
-            top-[380px] left-[1000px] w-[600px] hidden sm:block
-          "
-        />
-        <img
+        <Image
           src="/photo-left.png"
           alt="Сграда дясно мобилен"
-          className="
-            absolute rounded-xl object-cover
-            top-[440px] left-[18px] w-[90%] sm:hidden
-          "
+          width={800}
+          height={600}
+          className="rounded-xl object-cover w-full"
         />
+        <Image
+          src="/photo-maika.png"
+          alt="Жена с чертежи"
+          width={800}
+          height={600}
+          className="rounded-xl object-cover w-full"
+        />
+      </div>
 
-        {/* === ЕМБЛЕМА 1994 === */}
-        <img
+      {/* === ДЕСКТОП (от 1280px) === */}
+      <div className="hidden 2xl:block relative w-full max-w-[1600px] mx-auto h-[1100px]">
+        <h1 className="absolute top-[50px] left-[270px] w-[900px] text-6xl font-normal font-heading text-black leading-none">
+          Строим дома,
+        </h1>
+        <h1 className="absolute top-[120px] left-[110px] w-[1400px] text-6xl font-normal font-heading text-black leading-none">
+          в който мечтаеш да се прибереш.
+        </h1>
+        <p className="absolute top-[240px] left-[700px] w-[1000px] text-4xl font-normal font-heading text-black leading-tight whitespace-nowrap">
+          Строителство с български екип и сърце.
+        </p>
+
+        <Image
+          src="/photo-right.png"
+          alt="Сграда ляво"
+          width={600}
+          height={400}
+          className="absolute top-[280px] left-[0px] rounded-xl object-cover"
+        />
+        <Image
+          src="/photo-left.png"
+          alt="Сграда дясно"
+          width={600}
+          height={400}
+          className="absolute top-[380px] left-[1000px] rounded-xl object-cover"
+        />
+        <Image
           src="/badge-1994.svg"
           alt="1994"
-          className="
-            absolute object-contain
-            top-[360px] left-[650px] w-[300px] hidden sm:block
-          "
+          width={300}
+          height={300}
+          className="absolute object-contain top-[360px] left-[650px]"
         />
-       
       </div>
     </section>
   );

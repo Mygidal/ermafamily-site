@@ -31,35 +31,35 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 w-full h-[64px] sm:h-[80px] bg-[#f4f1ec] z-50 border-b border-blue-100">
-
-
-      <div className="w-full flex items-center justify-between h-full px-4 sm:hidden">
-        {/* Ляво: емблема 1994 */}
+    <header className="fixed top-0 left-0 w-full h-[54px] md:h-[80px] bg-[#f4f1ec] z-50 border-b border-blue-100">
+      
+      {/* === МОБИЛЕН + ТАБЛЕТ ХЕДЪР === */}
+      <div className="w-full flex items-center justify-between h-full px-4 lg:hidden">
+        {/* ЛЯВО: емблема */}
         <img
           src="/badge-1994-cleaned.svg"
           alt="1994"
-          className="w-[70px] h-auto object-contain"
+          className="h-[38px] w-auto object-contain translate-y-[-2px] mr-[8px]"
         />
 
-        {/* Център: лого */}
+        {/* ЦЕНТЪР: Лого + надпис */}
         <img
-          src="/logo-erma-mobil.png"
+          src="/logo-erma-header.svg"
           alt="ЕРМА"
-          className="w-[120px] h-auto object-contain"
+          className="h-[45px] w-auto object-contain translate-y-[1px] ml-[20px]"
         />
 
-        {/* Дясно: език + меню */}
+        {/* ДЯСНО: език и меню */}
         <div className="flex items-center gap-3">
           {/* Език */}
           <div className="relative" ref={langRef}>
             <button onClick={() => setLangOpen(!langOpen)} aria-label="Език">
-              <Image src="/flag-bg.png" alt="BG" width={28} height={28} />
+              <Image src="/flag-bg.png" alt="BG" width={24} height={24} />
             </button>
             {langOpen && (
               <div className="absolute top-[40px] right-0 bg-white shadow-md rounded-lg p-2 flex flex-col gap-2 items-center z-[999] min-w-[50px]">
-                <Image src="/flag-en.png" alt="EN" width={28} height={28} />
-                <Image src="/flag-de.png" alt="DE" width={28} height={28} />
+                <Image src="/flag-en.png" alt="EN" width={24} height={24} />
+                <Image src="/flag-de.png" alt="DE" width={24} height={24} />
               </div>
             )}
           </div>
@@ -91,51 +91,56 @@ export default function Header() {
         </div>
       </div>
 
-      {/* === Десктоп === */}
-      <div className="hidden sm:flex w-full max-w-[1600px] mx-auto items-center justify-between px-4 h-full">
-        {/* Лого */}
+      {/* === ДЕСКТОП ХЕДЪР === */}
+      <div className="hidden lg:flex w-full max-w-[1280px] mx-auto items-center justify-between px-4 h-full">
+        {/* ЛОГО + СОЦИАЛНИ */}
         <div className="flex items-center gap-4">
-  <Link href="/" aria-label="Начало">
-    <Image
-      src="/logo-erma.png"
-      alt="ЕРМА"
-      width={180}
-      height={60}
-      className="h-[60px] w-auto object-contain"
-      priority
-    />
-  </Link>
+          <Link href="/" aria-label="Начало">
+            <Image
+              src="/logo-erma.png"
+              alt="ЕРМА"
+              width={140}
+              height={48}
+              className="h-[48px] w-auto object-contain"
+              priority
+            />
+          </Link>
 
-  {/* Социални бутони до логото */}
-  <div className="flex gap-2 mt-2 ml-14">
-    <button aria-label="Facebook">
-      <Image src="/icon-facebook.png" alt="Facebook" width={28} height={28} className="w-7 h-7" />
-    </button>
-    <button aria-label="Instagram">
-      <Image src="/icon-instagram.png" alt="Instagram" width={28} height={28} className="w-7 h-7" />
-    </button>
-  </div>
-</div>
+          {/* Социални бутони */}
+          <div className="flex gap-2 ml-6">
+            <button aria-label="Facebook">
+              <Image src="/icon-facebook.png" alt="Facebook" width={28} height={28} className="w-7 h-7" />
+            </button>
+            <button aria-label="Instagram">
+              <Image src="/icon-instagram.png" alt="Instagram" width={28} height={28} className="w-7 h-7" />
+            </button>
+          </div>
+        </div>
 
-
-        {/* Навигация */}
-        <nav className="flex gap-4 mx-auto">
+        {/* НАВИГАЦИЯ */}
+        <nav className="flex gap-3 md:gap-4 mx-auto">
           {navLinks.map((label) => (
             <Link
               key={label}
               href="#"
-              className="min-w-[100px] border border-blue-900 px-4 py-1 rounded-full text-center text-sm"
+              className="min-w-[90px] border border-blue-900 px-3 py-1 rounded-full text-center text-sm"
             >
               {label}
             </Link>
           ))}
         </nav>
 
-        {/* Езици */}
-        <div className="flex items-center gap-[8px]">
+        {/* ЕЗИЦИ */}
+        <div className="flex items-center gap-[6px]">
           {languages.map(({ code, label }) => (
             <button key={code} aria-label={label}>
-              <Image src={`/flag-${code}.png`} alt={label} width={24} height={24} className="w-[24px] h-[24px]" />
+              <Image
+                src={`/flag-${code}.png`}
+                alt={label}
+                width={24}
+                height={24}
+                className="w-[24px] h-[24px]"
+              />
             </button>
           ))}
         </div>
