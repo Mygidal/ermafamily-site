@@ -17,6 +17,7 @@ const teamMembers = [
     position: 'Съосновател & Координатор проекти',
     image: '/team/monika.jpg',
   },
+
   {
     name: 'Андрей Александров',
     position: 'Ръководител груби строежи',
@@ -27,6 +28,12 @@ const teamMembers = [
     position: 'Ръководител довършителни работи',
     image: '/team/stefan.jpg',
   },
+  {
+  name: 'Илиянка Давидова',
+  position: 'Счетоводство & Офис мениджър',
+  image: '/team/iliyana.jpg',
+}
+
 ];
 
 export default function TeamPage() {
