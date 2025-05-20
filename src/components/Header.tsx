@@ -1,10 +1,17 @@
 'use client';
-
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-const navLinks = ['ЗА НАС', 'НАШИЯТ ЕКИП', 'УСЛУГИ', 'ЦЕНИ', 'ГАЛЕРИЯ', 'КОНТАКТИ'];
+const navLinks = [
+  { label: 'ЗА НАС', path: '/about' },
+  { label: 'НАШИЯТ ЕКИП', path: '/team' },
+  { label: 'УСЛУГИ', path: '/services' },
+  { label: 'ЦЕНИ', path: '/pricing' },
+  { label: 'ГАЛЕРИЯ', path: '/gallery' },
+  { label: 'КОНТАКТИ', path: '/contact' },
+];
+
 const languages = [
   { code: 'bg', label: 'BG' },
   { code: 'en', label: 'EN' },
@@ -35,23 +42,19 @@ export default function Header() {
       
       {/* === МОБИЛЕН + ТАБЛЕТ ХЕДЪР === */}
       <div className="w-full flex items-center justify-between h-full px-4 lg:hidden">
-        {/* ЛЯВО: емблема */}
         <img
           src="/badge-1994-cleaned.svg"
           alt="1994"
           className="h-[38px] w-auto object-contain translate-y-[-2px] mr-[8px]"
         />
 
-        {/* ЦЕНТЪР: Лого + надпис */}
         <img
           src="/logo-erma-header.svg"
           alt="ЕРМА"
           className="h-[45px] w-auto object-contain translate-y-[1px] ml-[20px]"
         />
 
-        {/* ДЯСНО: език и меню */}
         <div className="flex items-center gap-3">
-          {/* Език */}
           <div className="relative" ref={langRef}>
             <button onClick={() => setLangOpen(!langOpen)} aria-label="Език">
               <Image src="/flag-bg.png" alt="BG" width={24} height={24} />
@@ -64,7 +67,6 @@ export default function Header() {
             )}
           </div>
 
-          {/* Меню */}
           <div className="relative" ref={menuRef}>
             <button onClick={() => setMenuOpen(!menuOpen)} aria-label="Меню">
               <svg className="w-7 h-7 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -74,14 +76,16 @@ export default function Header() {
             {menuOpen && (
               <div className="absolute top-[50px] right-0 w-[90vw] bg-white border border-blue-100 shadow-md z-[999] px-4 py-4 rounded-xl">
                 <ul className="flex flex-col gap-3">
-                  {navLinks.map((label) => (
-                    <li key={label}>
+                  {navLinks.map(({ label, path }) => (
+                    <li key={path}>
                       <Link
-                        href="#"
-                        className="block border border-blue-900 px-4 py-2 rounded-full text-center text-sm font-medium"
-                      >
-                        {label}
-                      </Link>
+  href={path}
+  onClick={() => setMenuOpen(false)}
+  className="block border border-blue-900 px-4 py-2 rounded-full text-center text-sm font-medium"
+>
+  {label}
+</Link>
+
                     </li>
                   ))}
                 </ul>
@@ -93,7 +97,6 @@ export default function Header() {
 
       {/* === ДЕСКТОП ХЕДЪР === */}
       <div className="hidden lg:flex w-full max-w-[1280px] mx-auto items-center justify-between px-4 h-full">
-        {/* ЛОГО + СОЦИАЛНИ */}
         <div className="flex items-center gap-4">
           <Link href="/" aria-label="Начало">
             <Image
@@ -106,23 +109,32 @@ export default function Header() {
             />
           </Link>
 
-          {/* Социални бутони */}
           <div className="flex gap-2 ml-6">
-            <button aria-label="Facebook">
-              <Image src="/icon-facebook.png" alt="Facebook" width={28} height={28} className="w-7 h-7" />
-            </button>
-            <button aria-label="Instagram">
-              <Image src="/icon-instagram.png" alt="Instagram" width={28} height={28} className="w-7 h-7" />
-            </button>
-          </div>
+  <Link
+    href="https://www.facebook.com/profile.php?id=61564031771496"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Facebook"
+  >
+    <Image src="/icon-facebook.png" alt="Facebook" width={28} height={28} className="w-7 h-7" />
+  </Link>
+  <Link
+    href="https://www.instagram.com/"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Instagram"
+  >
+    <Image src="/icon-instagram.png" alt="Instagram" width={28} height={28} className="w-7 h-7" />
+  </Link>
+</div>
+
         </div>
 
-        {/* НАВИГАЦИЯ */}
         <nav className="flex gap-3 md:gap-4 mx-auto">
-          {navLinks.map((label) => (
+          {navLinks.map(({ label, path }) => (
             <Link
-              key={label}
-              href="#"
+              key={path}
+              href={path}
               className="min-w-[90px] border border-blue-900 px-3 py-1 rounded-full text-center text-sm"
             >
               {label}
@@ -130,7 +142,6 @@ export default function Header() {
           ))}
         </nav>
 
-        {/* ЕЗИЦИ */}
         <div className="flex items-center gap-[6px]">
           {languages.map(({ code, label }) => (
             <button key={code} aria-label={label}>

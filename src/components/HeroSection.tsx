@@ -41,7 +41,7 @@ export default function HeroSection() {
           alt="Жена с чертежи"
           width={800}
           height={600}
-          className="rounded-xl object-cover w-full"
+          className="rounded-xl object-cover w-full mb-6"
         />
       </div>
 
