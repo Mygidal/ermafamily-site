@@ -11,9 +11,21 @@ export default function Footer() {
         
         {/* Социални икони */}
         <div className="flex gap-4">
-          <a href="https://facebook.com" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
-            <Image src="/icon-facebook.png" alt="Facebook" width={24} height={24} className="w-6 h-6" />
-          </a>
+          <a
+  href="https://www.facebook.com/profile.php?id=61564031771496"
+  aria-label="Facebook"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  <Image
+    src="/icon-facebook.png"
+    alt="Facebook"
+    width={24}
+    height={24}
+    className="w-6 h-6"
+  />
+</a>
+
           <a href="https://instagram.com" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
             <Image src="/icon-instagram.png" alt="Instagram" width={24} height={24} className="w-6 h-6" />
           </a>
