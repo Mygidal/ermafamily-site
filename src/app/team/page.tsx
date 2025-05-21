@@ -102,7 +102,8 @@ export default function TeamPage() {
 
       {/* Горен надпис */}
       <div className="absolute top-2 left-0 right-0 text-center text-white text-xs sm:text-sm font-semibold bg-black/40 px-2 py-1 z-10">
-        СТЪЛБОВЕТЕ НА КОИТО Е СТЪПИЛА "ЕРМА ФАМИЛНА"
+        ДВАТА СТЪЛБА НА КОИТО Е СТЪПИЛА &quot;ЕРМА ФАМИЛНА&quot;
+
       </div>
 
       {/* Долен надпис */}
