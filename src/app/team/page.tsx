@@ -85,56 +85,77 @@ export default function TeamPage() {
       </section>
 
       <section>
-        <h2 className="text-2xl font-bold text-blue-800 text-center mt-12 mb-6">👷 Днешният екип</h2>
-        <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3">
-          {teamMembers.map((member) => (
-            <div
-              key={member.name}
-              className="flex flex-col items-center text-center p-4 shadow-md rounded-lg bg-white hover:shadow-lg transition"
-            >
-              <div className="relative w-[120px] h-[120px] mb-4">
-                <Image
-                  src={member.image}
-                  alt={member.name}
-                  fill
-                  className="object-cover rounded-full border-4 border-blue-200"
-                />
-              </div>
-              <h3 className="text-lg font-semibold text-blue-900">{member.name}</h3>
-              <p className="text-sm text-gray-600">{member.position}</p>
-            </div>
-          ))}
+  <h2 className="text-2xl font-bold text-blue-800 text-center mt-12 mb-6">👷 Днешният екип</h2>
+
+  {/* 🎬 Видео под заглавието */}
+  <div className="flex justify-center mb-8">
+    <div className="relative w-full max-w-[420px] mx-auto rounded-xl overflow-hidden shadow-xl">
+      <video
+        id="teamVideo"
+        controls
+        poster="/gallery/videos/team-poster.jpg"
+        className="w-full h-full object-contain bg-black"
+      >
+        <source src="/gallery/videos/gallery-video-02.mp4" type="video/mp4" />
+        Вашият браузър не поддържа видео.
+      </video>
+
+      {/* Горен надпис */}
+      <div className="absolute top-2 left-0 right-0 text-center text-white text-xs sm:text-sm font-semibold bg-black/40 px-2 py-1 z-10">
+        СТЪЛБОВЕТЕ НА КОИТО Е СТЪПИЛА "ЕРМА ФАМИЛНА"
+      </div>
+
+      {/* Долен надпис */}
+      <div className="absolute bottom-2 left-0 right-0 text-center text-white text-xs sm:text-sm font-semibold bg-black/40 px-2 py-1 z-10">
+        📞 Обадете се за оглед: +359 88 123 4567
+      </div>
+    </div>
+  </div>
+
+  {/* Grid с екипа */}
+  <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3">
+    {teamMembers.map((member) => (
+      <div
+        key={member.name}
+        className="flex flex-col items-center text-center p-4 shadow-md rounded-lg bg-white hover:shadow-lg transition"
+      >
+        <div className="relative w-[120px] h-[120px] mb-4">
+          <Image
+            src={member.image}
+            alt={member.name}
+            fill
+            className="object-cover rounded-full border-4 border-blue-200"
+          />
         </div>
-      </section>
+        <h3 className="text-lg font-semibold text-blue-900">{member.name}</h3>
+        <p className="text-sm text-gray-600">{member.position}</p>
+      </div>
+    ))}
+  </div>
+</section>
 
-      {/* 🎬 Видео секция с overlay */}
-      <section className="mt-16 space-y-4 text-center">
-        <h2 className="text-2xl font-semibold text-blue-900">
-          📹 Отговорност. Професионализъм. Човечност.
-        </h2>
-        <p className="text-gray-700 max-w-2xl mx-auto">
-          Вижте как мислят и говорят двамата стълба на строителството в ЕРМА – <strong>Андрей Александров</strong> и <strong>Стефан Митков</strong>. 
-          За тях работата не е просто занаят, а въпрос на чест, култура и отношение към клиента.
-        </p>
 
-        <div className="relative w-fit mx-auto rounded-lg overflow-hidden shadow-lg">
-
+      {/* Видео точно под екипа */}
+      <section className="mt-10 flex justify-center">
+        <div className="relative w-full max-w-[420px] mx-auto rounded-xl overflow-hidden shadow-xl">
           <video
             id="teamVideo"
             controls
             poster="/gallery/videos/team-poster.jpg"
-           className="w-full h-full object-contain bg-black"
-
+            className="w-full h-full object-contain bg-black"
           >
-            <source src="/gallery/videos/team-interview.mp4" type="video/mp4" />
+            <source src="/gallery/videos/gallery-video-02.mp4" type="video/mp4" />
             Вашият браузър не поддържа видео.
           </video>
 
-          <div
-            id="videoOverlayText"
-            className="absolute inset-0 flex items-center justify-center text-white text-xl font-semibold bg-black/50 pointer-events-none"
-          >
-            ▶️ Натиснете Play, за да чуете двамата стълба на строителството в ЕРМА – Андрей Александров и Стефан Митков
+          {/* Горен надпис */}
+          <div className="absolute top-2 left-0 right-0 text-center text-white text-xs sm:text-sm font-semibold bg-black/40 px-2 py-1 z-10">
+            Про точност. Про съвест. Про строителство.
+          </div>
+
+          {/* Долен надпис */}
+          <div className="absolute bottom-2 left-0 right-0 text-center text-white text-xs sm:text-sm font-semibold bg-black/40 px-2 py-1 z-10">
+            📞 Обадете се за оглед: +359 88 123 4567
           </div>
         </div>
       </section>
