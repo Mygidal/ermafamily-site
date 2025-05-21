@@ -90,6 +90,11 @@ export default function TeamPage() {
   {/* 🎬 Видео под заглавието */}
   <div className="flex justify-center mb-8">
     <div className="relative w-full max-w-[420px] mx-auto rounded-xl overflow-hidden shadow-xl">
+     {/* CTA текст върху постера преди пускане */}
+<div className="absolute inset-0 z-10 flex items-center justify-center text-white text-sm sm:text-base font-semibold bg-black/60 px-4 text-center pointer-events-none">
+  ЧУЙТЕ АНДРЕЙ АЛЕКСАНДРОВ И СТЕФАН МИТКОВ<br />ЗА СТРАТЕГИЯТА ЗА РАЗВИТИЕ НА ФИРМАТА
+</div>
+
       <video
         id="teamVideo"
         controls
