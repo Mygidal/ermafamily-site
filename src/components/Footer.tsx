@@ -6,7 +6,12 @@ export default function Footer() {
   return (
     <>
       {/* === МОБИЛЕН + ТАБЛЕТ ФУТЪР === */}
-      <footer className="flex 2xl:hidden flex-col items-center gap-3 bg-stone-300 text-black text-xs font-normal font-sans w-full px-4 py-4 text-center">
+      <footer
+   style={{ backgroundColor: '#f4f1ec' }}  // 👈 завършва тук
+  className="flex 2xl:hidden flex-col items-center gap-3 text-black text-xs font-normal font-sans w-full px-4 py-4 text-center"
+>
+
+
 
         {/* Социални икони */}
         <div className="flex gap-4">

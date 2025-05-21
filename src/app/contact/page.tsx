@@ -1,4 +1,34 @@
-﻿export default function ContactPage() {
+﻿'use client';
+
+export default function ContactPage() {
+  const contacts = [
+    {
+      name: 'Цветанка Йовева',
+      role: 'Управител',
+      phone: '+359 887 317 087',
+    },
+    {
+      name: 'Еди Йовев',
+      role: 'Технически ръководител',
+      phone: '+359 888 071 404',
+    },
+    {
+      name: 'Моника Йовева',
+      role: 'Проектен координатор',
+      phone: '+359 885 651 505',
+    },
+    {
+      name: 'Андрей Александров',
+      role: 'Груб строеж',
+      phone: '+359 878 447 214',
+    },
+    {
+      name: 'Стефан Митков',
+      role: 'Довършителни работи',
+      phone: '+359 888 444 396',
+    },
+  ];
+
   return (
     <div className="pt-[100px] pb-10 px-4 max-w-[1280px] mx-auto">
       {/* Заглавие */}
@@ -50,7 +80,7 @@
           <div>
             <h3 className="font-bold text-base text-blue-900">Адрес</h3>
             <a
-              href="https://www.google.bg/maps/place/кв.+Овча+купел,+ул.+„692-ра“+12,+1618+София/@42.6777594,23.2508653,799m/data=!3m2!1e3!4b1!4m6!3m5!1s0x40aa9b2fe0506391:0x58036b9c19288a11!8m2!3d42.6777556!4d23.2557362"
+              href="https://www.google.bg/maps/place/кв.+Овча+купел,+ул.+„692-ра“+12,+1618+София/@42.6777594,23.2508653,799m"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:underline text-blue-800"
@@ -58,35 +88,87 @@
               София, кв. „Овча купел“, ул. 692, №12
             </a>
           </div>
+
           <div>
-            <h3 className="font-bold text-base text-blue-900">Телефон</h3>
-            <p>+359 88 123 4567</p>
-          </div>
-          <div>
-            <h3 className="font-bold text-base text-blue-900">Имейл</h3>
-            <p>office@ermafamily.bg</p>
-          </div>
+  <h3 className="font-bold text-base text-blue-900">Имейл</h3>
+  <p>
+    <a
+      href="mailto:team@ermafamily.com"
+      className="hover:underline text-blue-800"
+    >
+      team@ermafamily.com
+    </a>
+  </p>
+</div>
+
+
           <div className="flex gap-4 mt-2">
-            <a href="https://www.facebook.com/profile.php?id=61564031771496" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://www.facebook.com/profile.php?id=61564031771496"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <img src="/icon-facebook.png" alt="Facebook" className="w-6 h-6" />
             </a>
-            <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://www.instagram.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <img src="/icon-instagram.png" alt="Instagram" className="w-6 h-6" />
             </a>
+          </div>
+
+          {/* Подредени телефони */}
+          <div className="mt-6 space-y-4">
+            <h3 className="font-bold text-base text-blue-900">Контакти по отдели</h3>
+            <div className="space-y-3">
+              {contacts.map((person, i) => (
+                <div
+                  key={i}
+                  className="flex flex-col sm:flex-row sm:justify-between sm:items-center"
+                >
+                  <div>
+                    <p className="font-semibold text-gray-800">{person.name}</p>
+                    <p className="text-sm text-gray-500">{person.role}</p>
+                  </div>
+                  <a
+                    href={`tel:${person.phone.replace(/\s+/g, '')}`}
+                    className="text-blue-800 text-sm hover:underline mt-1 sm:mt-0"
+                  >
+                    📞 {person.phone}
+                  </a>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
       {/* Карта */}
-      <div className="w-full h-[300px] rounded-xl overflow-hidden shadow-md mb-6">
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2933.2826935786565!2d23.2642711!3d42.668168!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40aa85b2b36d1ad1%3A0xe0fd274d9ba2a43b!2z0J7QntCeICLQotC10YDQutC-0LLQtdGAIg!5e0!3m2!1sbg!2sbg!4v1716200000000"
-          width="100%"
-          height="100%"
-          allowFullScreen
-          loading="lazy"
-        ></iframe>
-      </div>
+<div className="w-full h-[300px] rounded-xl overflow-hidden shadow-md mb-6">
+  <iframe
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2933.3720703726787!2d23.254711615731854!3d42.67775557916617!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40aa9b2fe0506391%3A0x58036b9c19288a11!2z0KHQsNC00LDRgtGMINC60LvRltC60LDRgNC90LAgItCQ0LvQtdC90LAgNjkyLCDQodCw0LQ!5e0!3m2!1sbg!2sbg!4v1716900000000"
+    width="100%"
+    height="100%"
+    allowFullScreen
+    loading="lazy"
+    referrerPolicy="no-referrer-when-downgrade"
+  ></iframe>
+</div>
+
+{/* Бутон "Как да стигна" */}
+<div className="text-center mb-10">
+  <a
+    href="https://www.google.com/maps/dir/?api=1&destination=София,+ул.+692,+Овча+купел"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="inline-block bg-blue-900 text-white px-6 py-2 rounded-full hover:bg-blue-800 transition text-sm"
+  >
+    🧭 Как да стигна до офиса
+  </a>
+</div>
+
 
       {/* Работно време */}
       <div className="text-center text-sm text-gray-600">

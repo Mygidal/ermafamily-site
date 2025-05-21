@@ -9,134 +9,177 @@ export default function PriceCalculator() {
   const [basement, setBasement] = useState(false);
   const [roof, setRoof] = useState("Скатен");
   const [exterior, setExterior] = useState("Стенна изолация + мазилка");
+  const [customRate, setCustomRate] = useState(500); // Цена на кв.м в лв.
+  const [showInquiry, setShowInquiry] = useState(false);
+  const [contact, setContact] = useState({ name: "", email: "", phone: "" });
 
-  const baseRate = construction === "Груб строеж" ? 250 : 400;
   const floorMultiplier = floors * 1.05;
-  const basementCost = basement ? 8000 : 0;
-  const roofCost = roof === "Плосък" ? 5000 : 8000;
-  const exteriorCost =
-    exterior === "Фасада с HPL панели" ? 20000 : 8000;
+  const basementCost = basement ? 15000 : 0;
+  const roofCost = roof === "Плосък" ? 10000 : 15000;
+  const exteriorCost = exterior === "Фасада с HPL панели" ? 30000 : 12000;
 
-  const total =
-    area * baseRate * floorMultiplier + basementCost + roofCost + exteriorCost;
+  const total = area * customRate * floorMultiplier + basementCost + roofCost + exteriorCost;
 
   return (
     <section className="w-full max-w-[1280px] mx-auto px-4 py-24 text-blue-900">
       <h2 className="text-3xl md:text-4xl font-bold text-center mb-10 font-montserrat">
-        Калкулатор за ориентировъчна строителна цена
+        Цени на строителство
       </h2>
 
-      <p className="max-w-3xl mx-auto text-center text-gray-700 mb-10">
-        Този калкулатор ще ви помогне да получите базова представа за стойността
-        на строителството според зададени параметри. Цените са ориентировъчни и
-        не включват ДДС.
-      </p>
+      <div className="bg-white border border-gray-200 p-6 rounded-lg mb-12 shadow">
+        <h3 className="text-xl font-semibold mb-4">Ориентировъчни строителни цени (в лв.)</h3>
+        <ul className="list-disc pl-5 space-y-1 text-sm text-gray-800">
+          <li>Груб строеж – по разгъната застроена площ: от 500 лв./м²</li>
+          <li>Груб строеж – по контур на плоча: от 600 лв./м²</li>
+          <li>Довършване до ключ: от 900 до 1200 лв./м² в зависимост от материалите</li>
+          <li>Изкоп и извозване: около 60 лв./м³</li>
+          <li>Кофраж и армировка: около 360 лв./м²</li>
+          <li>Плоча + колони: около 400 лв./м²</li>
+          <li>Зидария: около 80 лв./м²</li>
+          <li>Изолация и мазилка: около 130 лв./м²</li>
+          <li>HPL фасада: около 240 лв./м²</li>
+          <li>Скатен покрив: около 160 лв./м²</li>
+          <li>Плосък покрив: около 120 лв./м²</li>
+        </ul>
+        <p className="text-xs mt-4 text-gray-500 italic">
+          Цените са ориентировъчни и подлежат на уточнение след оглед и среща с клиента.
+        </p>
+      </div>
+
+      <h2 className="text-2xl font-bold text-center mb-6">Калкулатор за ориентировъчна цена</h2>
 
       <div className="grid gap-10 md:grid-cols-2">
         <div className="flex flex-col gap-6">
-          <div>
-            <label className="block mb-1 font-semibold text-sm">Тип строителство</label>
+          <label className="block">
+            <span className="text-sm font-semibold">Тип строителство</span>
             <select
               value={construction}
               onChange={(e) => setConstruction(e.target.value)}
-              className="w-full border border-gray-300 rounded-md p-2"
+              className="w-full mt-1 border border-gray-300 rounded-md p-2"
             >
               <option>Груб строеж</option>
               <option>До ключ</option>
             </select>
-          </div>
+          </label>
 
-          <div>
-            <label className="block mb-1 font-semibold text-sm">Обща застроена площ (м²)</label>
+          <label className="block">
+            <span className="text-sm font-semibold">Цена на м² (лв.) – настройка</span>
+            <input
+              type="number"
+              value={customRate}
+              onChange={(e) => setCustomRate(Number(e.target.value))}
+              className="w-full mt-1 border border-gray-300 rounded-md p-2"
+            />
+          </label>
+
+          <label className="block">
+            <span className="text-sm font-semibold">Обща застроена площ (м²)</span>
             <input
               type="number"
               value={area}
               min={20}
               onChange={(e) => setArea(Number(e.target.value))}
-              className="w-full border border-gray-300 rounded-md p-2"
+              className="w-full mt-1 border border-gray-300 rounded-md p-2"
             />
-          </div>
+          </label>
 
-          <div>
-            <label className="block mb-1 font-semibold text-sm">Брой етажи</label>
+          <label className="block">
+            <span className="text-sm font-semibold">Брой етажи</span>
             <select
               value={floors}
               onChange={(e) => setFloors(Number(e.target.value))}
-              className="w-full border border-gray-300 rounded-md p-2"
+              className="w-full mt-1 border border-gray-300 rounded-md p-2"
             >
               {[1, 2, 3, 4, 5].map((n) => (
-                <option key={n} value={n}>
-                  {n} етаж(а)
-                </option>
+                <option key={n} value={n}>{n} етаж(а)</option>
               ))}
             </select>
-          </div>
+          </label>
 
-          <div>
-            <label className="flex items-center gap-2 text-sm">
-              <input
-                type="checkbox"
-                checked={basement}
-                onChange={(e) => setBasement(e.target.checked)}
-              />
-              Включва ли мазе или сутерен?
-            </label>
-          </div>
+          <label className="flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              checked={basement}
+              onChange={(e) => setBasement(e.target.checked)}
+            />
+            Включва ли мазе или сутерен?
+          </label>
 
-          <div>
-            <label className="block mb-1 font-semibold text-sm">Покрив</label>
+          <label className="block">
+            <span className="text-sm font-semibold">Покрив</span>
             <select
               value={roof}
               onChange={(e) => setRoof(e.target.value)}
-              className="w-full border border-gray-300 rounded-md p-2"
+              className="w-full mt-1 border border-gray-300 rounded-md p-2"
             >
               <option>Скатен</option>
               <option>Плосък</option>
             </select>
-          </div>
+          </label>
 
-          <div>
-            <label className="block mb-1 font-semibold text-sm">Фасада</label>
+          <label className="block">
+            <span className="text-sm font-semibold">Фасада</span>
             <select
               value={exterior}
               onChange={(e) => setExterior(e.target.value)}
-              className="w-full border border-gray-300 rounded-md p-2"
+              className="w-full mt-1 border border-gray-300 rounded-md p-2"
             >
               <option>Стенна изолация + мазилка</option>
               <option>Фасада с HPL панели</option>
             </select>
-          </div>
+          </label>
 
-          <div className="mt-4">
-            <p className="text-gray-700 text-sm">
-              Цена на м²: <strong>{baseRate} €</strong>
-            </p>
-            <p className="text-xl font-semibold mt-2">
-              Ориентировъчна стойност: <span className="text-green-600">{total.toLocaleString()} €</span>
-            </p>
-          </div>
+          <p className="text-xl font-semibold mt-6">
+            Ориентировъчна стойност: <span className="text-green-600">{total.toLocaleString()} лв.</span>
+          </p>
         </div>
 
-        <div className="bg-stone-100 rounded-lg p-6 text-sm text-gray-700 leading-relaxed shadow-inner">
-          <h3 className="font-semibold text-blue-800 mb-2">Единични ориентировъчни цени:</h3>
-          <ul className="list-disc pl-5 space-y-1">
-            <li>Изкоп и извозване: ~30 €/м³</li>
-            <li>Кофраж + армировка: ~180 €/м²</li>
-            <li>Плоча + колони: ~200 €/м²</li>
-            <li>Зидария: ~40 €/м²</li>
-            <li>Външна мазилка + изолация: ~65 €/м²</li>
-            <li>HPL фасада: ~120 €/м²</li>
-            <li>Скатен покрив: ~80 €/м²</li>
-            <li>Плосък покрив: ~60 €/м²</li>
-          </ul>
-
-          <p className="text-xs mt-6 text-gray-500 italic">
-            Всички цени са ориентировъчни и подлежат на уточнение след оглед на терен и разговор с инвеститора.
-          </p>
-
-          <button className="mt-6 w-full bg-blue-800 hover:bg-blue-700 text-white py-2 px-4 rounded-md">
+        <div className="bg-stone-100 rounded-lg p-6 shadow-inner text-sm">
+          <h3 className="font-semibold text-blue-800 mb-2">Искате оферта?</h3>
+          <button
+            onClick={() => setShowInquiry(!showInquiry)}
+            className="w-full bg-blue-800 hover:bg-blue-700 text-white py-2 px-4 rounded-md"
+          >
             Изпрати запитване
           </button>
+
+          {showInquiry && (
+  <form className="mt-4 space-y-3">
+    <input
+      type="text"
+      placeholder="Вашето име"
+      value={contact.name}
+      onChange={(e) => setContact({ ...contact, name: e.target.value })}
+      className="w-full p-2 border border-gray-300 rounded"
+    />
+    <input
+      type="email"
+      placeholder="Имейл"
+      value={contact.email}
+      onChange={(e) => setContact({ ...contact, email: e.target.value })}
+      className="w-full p-2 border border-gray-300 rounded"
+    />
+    <input
+      type="tel"
+      placeholder="Телефон"
+      value={contact.phone}
+      onChange={(e) => setContact({ ...contact, phone: e.target.value })}
+      className="w-full p-2 border border-gray-300 rounded"
+    />
+    <textarea
+      placeholder="Вашето запитване – опишете обекта, особености, изисквания..."
+      rows={4}
+      className="w-full p-2 border border-gray-300 rounded"
+    ></textarea>
+    <button
+      type="submit"
+      className="bg-green-700 hover:bg-green-600 text-white w-full py-2 px-4 rounded"
+    >
+      Изпрати
+    </button>
+  </form>
+)}
+
         </div>
       </div>
     </section>

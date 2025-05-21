@@ -87,37 +87,7 @@ export default function TeamPage() {
       <section>
   <h2 className="text-2xl font-bold text-blue-800 text-center mt-12 mb-6">👷 Днешният екип</h2>
 
-  {/* 🎬 Видео под заглавието */}
-  <div className="flex justify-center mb-8">
-    <div className="relative w-full max-w-[420px] mx-auto rounded-xl overflow-hidden shadow-xl">
-     {/* CTA текст върху постера преди пускане */}
-<div className="absolute inset-0 z-10 flex items-center justify-center text-white text-sm sm:text-base font-semibold bg-black/60 px-4 text-center pointer-events-none">
-  ЧУЙТЕ АНДРЕЙ АЛЕКСАНДРОВ И СТЕФАН МИТКОВ<br />ЗА СТРАТЕГИЯТА ЗА РАЗВИТИЕ НА ФИРМАТА
-</div>
-
-      <video
-        id="teamVideo"
-        controls
-        poster="/gallery/videos/team-poster.jpg"
-        className="w-full h-full object-contain bg-black"
-      >
-        <source src="/gallery/videos/gallery-video-02.mp4" type="video/mp4" />
-        Вашият браузър не поддържа видео.
-      </video>
-
-      {/* Горен надпис */}
-      <div className="absolute top-2 left-0 right-0 text-center text-white text-xs sm:text-sm font-semibold bg-black/40 px-2 py-1 z-10">
-        ДВАТА СТЪЛБА НА КОИТО Е СТЪПИЛА &quot;ЕРМА ФАМИЛНА&quot;
-
-      </div>
-
-      {/* Долен надпис */}
-      <div className="absolute bottom-2 left-0 right-0 text-center text-white text-xs sm:text-sm font-semibold bg-black/40 px-2 py-1 z-10">
-        📞 Обадете се за оглед: +359 88 123 4567
-      </div>
-    </div>
-  </div>
-
+  
   {/* Grid с екипа */}
   <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3">
     {teamMembers.map((member) => (
@@ -139,11 +109,9 @@ export default function TeamPage() {
     ))}
   </div>
 </section>
+    
 
-
-     
-
-      <section className="mt-12 text-center text-sm text-gray-500 italic space-y-4">
+      <section className="mt-24 text-center text-sm text-gray-500 italic space-y-6">
         <p>
           В памет на <strong>Стоил Трендафилов</strong> – строител от Трънския край, баща, дядо, прадядо и ръководител на строежа на НДК. Майстор по съвест, родоначалник по мисия.
         </p>
