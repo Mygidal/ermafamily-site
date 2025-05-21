@@ -25,7 +25,7 @@ export default function Footer() {
             />
           </a>
           <a
-            href="https://instagram.com"
+            href="https://www.instagram.com/erma.familna/"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Instagram"

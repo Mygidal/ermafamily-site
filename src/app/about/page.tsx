@@ -1,6 +1,6 @@
 ﻿export default function AboutPage() {
   return (
-    <div className="pt-[80px] px-4 max-w-[1280px] mx-auto text-gray-800 font-inter leading-relaxed space-y-6">
+    <div className="pt-[100px] pb-10 px-4 max-w-[1280px] mx-auto text-gray-800 font-inter leading-relaxed space-y-6">
       <h1 className="text-3xl md:text-4xl font-bold font-montserrat text-blue-900 text-center mb-6">
         ЗА НАС
       </h1>
@@ -31,11 +31,7 @@
         Да възпита млади майстори. Да вдъхне гордост в занаятчийството. Да строи не само с тухли, а с памет.
       </p>
 
-      <p className="text-center mt-8">
-        🔗 <a href="https://x5mgroup.com/za-nas" target="_blank" rel="noopener noreferrer" className="text-blue-700 underline">
-          Прочетете повече за нашата мисия и партньорства
-        </a>
-      </p>
+      
 
       <p className="text-center font-semibold text-blue-900">
         ЕРМА – това е име, издялано в камък и дърво, вписано в планините на Трънско, в корените на едно семейство и в бъдещето, което продължаваме да градим – с отговорност, с ръце и със сърце.

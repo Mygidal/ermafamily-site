@@ -1,6 +1,6 @@
 ﻿export default function ContactPage() {
   return (
-    <div className="pt-[80px] px-4 max-w-[1280px] mx-auto">
+    <div className="pt-[100px] pb-10 px-4 max-w-[1280px] mx-auto">
       {/* Заглавие */}
       <div className="text-center mb-8">
         <h1 className="text-3xl md:text-4xl font-bold font-montserrat text-blue-900 mb-2">

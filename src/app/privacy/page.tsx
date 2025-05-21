@@ -1,6 +1,6 @@
 export default function PrivacyPage() {
   return (
-    <div className="pt-[80px] px-4 max-w-[800px] mx-auto text-gray-800 font-inter space-y-6">
+    <div className="pt-[100px] pb-10 px-4 max-w-[800px] mx-auto text-gray-800 font-inter space-y-6">
       <h1 className="text-3xl font-bold font-montserrat text-blue-900 text-center mb-6">
         Политика за поверителност
       </h1>

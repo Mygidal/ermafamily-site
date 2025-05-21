@@ -125,7 +125,7 @@ export default function Header() {
     <Image src="/icon-facebook.png" alt="Facebook" width={28} height={28} className="w-7 h-7" />
   </Link>
   <Link
-    href="https://www.instagram.com/"
+    href="https://www.instagram.com/erma.familna/"
     target="_blank"
     rel="noopener noreferrer"
     aria-label="Instagram"
