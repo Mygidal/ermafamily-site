@@ -141,30 +141,7 @@ export default function TeamPage() {
 </section>
 
 
-      {/* Видео точно под екипа */}
-      <section className="mt-10 flex justify-center">
-        <div className="relative w-full max-w-[420px] mx-auto rounded-xl overflow-hidden shadow-xl">
-          <video
-            id="teamVideo"
-            controls
-            poster="/gallery/videos/team-poster.jpg"
-            className="w-full h-full object-contain bg-black"
-          >
-            <source src="/gallery/videos/gallery-video-02.mp4" type="video/mp4" />
-            Вашият браузър не поддържа видео.
-          </video>
-
-          {/* Горен надпис */}
-          <div className="absolute top-2 left-0 right-0 text-center text-white text-xs sm:text-sm font-semibold bg-black/40 px-2 py-1 z-10">
-            Про точност. Про съвест. Про строителство.
-          </div>
-
-          {/* Долен надпис */}
-          <div className="absolute bottom-2 left-0 right-0 text-center text-white text-xs sm:text-sm font-semibold bg-black/40 px-2 py-1 z-10">
-            📞 Обадете се за оглед: +359 88 123 4567
-          </div>
-        </div>
-      </section>
+     
 
       <section className="mt-12 text-center text-sm text-gray-500 italic space-y-4">
         <p>
