@@ -73,18 +73,21 @@ const currentLang = pathname.startsWith('/en')
   <div className="flex flex-wrap items-center gap-2 shrink-0 ml-auto z-10">
     <div className="relative shrink-0" ref={langRef}>
       <button onClick={() => setLangOpen(!langOpen)} aria-label="Език">
-        <Image src="/flag-bg.png" alt="BG" width={24} height={24} />
+       <Image src={`/flag-${currentLang}.png`} alt={currentLang.toUpperCase()} width={24} height={24} />
+
       </button>
-      {langOpen && (
+     {langOpen && (
   <div className="absolute top-[40px] right-0 bg-white shadow-md rounded-lg p-2 flex flex-col gap-2 items-center z-[999] min-w-[50px]">
-    <Link href="/en" onClick={() => setLangOpen(false)}>
-      <Image src="/flag-en.png" alt="EN" width={24} height={24} />
-    </Link>
-    <Link href="/de" onClick={() => setLangOpen(false)}>
-      <Image src="/flag-de.png" alt="DE" width={24} height={24} />
-    </Link>
+    {languages
+      .filter(({ code }) => code !== currentLang)
+      .map(({ code, label }) => (
+        <Link key={code} href={code === 'bg' ? '/' : `/${code}`} onClick={() => setLangOpen(false)}>
+          <Image src={`/flag-${code}.png`} alt={label} width={24} height={24} />
+        </Link>
+      ))}
   </div>
 )}
+
 
     </div>
 
