@@ -41,25 +41,29 @@ export default function Header() {
     <header className="fixed top-0 left-0 w-full h-[54px] md:h-[80px] bg-[#f4f1ec] z-50 border-b border-blue-100">
       
       {/* === МОБИЛЕН + ТАБЛЕТ ХЕДЪР === */}
-<div className="w-full flex items-center justify-between h-full px-4 lg:hidden">
+<div className="w-full flex items-center justify-between h-full px-4 lg:hidden relative">
+  {/* Лого 1994 */}
   <img
     src="/badge-1994-cleaned.svg"
     alt="1994"
-    className="h-[38px] w-auto object-contain translate-y-[-2px] mr-[8px]"
+    className="h-[38px] w-auto object-contain translate-y-[-2px] mr-[8px] z-10"
   />
 
-  <Link href="/" aria-label="Начало">
-  <img
-    src="/logo-erma-header.svg"
-    alt="ЕРМА"
-    className="h-[45px] w-auto object-contain translate-y-[1px] ml-[20px]"
-  />
-</Link>
+  {/* Центрирано лого */}
+  <Link
+    href="/"
+    aria-label="Начало"
+    className="absolute left-1/2 transform -translate-x-1/2 z-0"
+  >
+    <img
+      src="/ЕРМА ФАМИЛНА.png"
+      alt="ЕРМА"
+      className="h-[30px] w-auto object-contain translate-y-[1px]"
+    />
+  </Link>
 
-
-  {/* ЕЗИК + МЕНЮ БУТОНИ */}
-  <div className="flex flex-wrap items-center gap-2 shrink-0 ml-auto">
-    {/* ЕЗИК */}
+  {/* Език + меню */}
+  <div className="flex flex-wrap items-center gap-2 shrink-0 ml-auto z-10">
     <div className="relative shrink-0" ref={langRef}>
       <button onClick={() => setLangOpen(!langOpen)} aria-label="Език">
         <Image src="/flag-bg.png" alt="BG" width={24} height={24} />
