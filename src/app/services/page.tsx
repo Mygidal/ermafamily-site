@@ -1,31 +1,38 @@
-﻿'use client';
-import Image from 'next/image';
+﻿"use client";
+import Image from "next/image";
 
 export default function ServicesPage() {
   return (
-    <div className="pt-[100px] pb-10 px-4 max-w-[1280px] mx-auto text-gray-800 font-inter space-y-12">
-      <h1 className="text-3xl md:text-4xl font-bold font-montserrat text-blue-900 text-center">
+    <div className="font-inter mx-auto max-w-screen-xl space-y-12 px-4 pb-10 pt-[100px] text-gray-800">
+      <h1 className="font-montserrat text-center text-3xl font-bold text-blue-900 md:text-4xl">
         Нашите услуги
       </h1>
 
       {/* Въведение – бутиково строителство */}
-      <section className="text-gray-700 text-center max-w-3xl mx-auto space-y-4">
+      <section className="mx-auto max-w-3xl space-y-4 text-center text-gray-700">
         <p>
-          <strong>ЕРМА – ФАМИЛНА ООД</strong> се специализира в <strong>бутиково строителство</strong>, 
-          насочено към клиенти, които ценят качеството, индивидуалното обслужване и устойчивото изграждане.
+          <strong>ЕРМА – ФАМИЛНА ООД</strong> се специализира в{" "}
+          <strong>бутиково строителство</strong>, насочено към клиенти, които
+          ценят качеството, индивидуалното обслужване и устойчивото изграждане.
         </p>
         <p>
-          Предпочитаме да работим по <strong>частни къщи (от основи до ключ)</strong> и <strong>малки жилищни кооперации</strong>, 
-          където можем да прилагаме персонализирани решения и занаятчийски подход.  
-          По желание на клиента можем да изградим и <strong>умен дом</strong> – с автоматизирано осветление, климатизация, сигурност и управление чрез мобилно приложение.
+          Предпочитаме да работим по{" "}
+          <strong>частни къщи (от основи до ключ)</strong> и{" "}
+          <strong>малки жилищни кооперации</strong>, където можем да прилагаме
+          персонализирани решения и занаятчийски подход. По желание на клиента
+          можем да изградим и <strong>умен дом</strong> – с автоматизирано
+          осветление, климатизация, сигурност и управление чрез мобилно
+          приложение.
         </p>
       </section>
 
       {/* Строителство на сгради */}
-      <section className="flex flex-col lg:flex-row gap-10 items-center">
+      <section className="flex flex-col items-center gap-10 lg:flex-row">
         <div className="flex-1 space-y-4">
-          <h2 className="text-2xl font-semibold text-blue-800">🏗️ Строителство на сгради</h2>
-          <ul className="list-disc pl-5 text-gray-700 space-y-1">
+          <h2 className="text-2xl font-semibold text-blue-800">
+            🏗️ Строителство на сгради
+          </h2>
+          <ul className="list-disc space-y-1 pl-5 text-gray-700">
             <li>Проектиране и изграждане на жилищни и търговски сгради</li>
             <li>Изпълнение на груб строеж и довършителни работи</li>
             <li>Монтаж на фасадни системи и покривни конструкции</li>
@@ -39,16 +46,18 @@ export default function ServicesPage() {
             alt="Строителство на сгради"
             width={600}
             height={400}
-            className="rounded-lg shadow-md object-cover w-full h-auto"
+            className="h-auto w-full rounded-lg object-cover shadow-md"
           />
         </div>
       </section>
 
       {/* Вътрешни довършителни работи */}
-      <section className="flex flex-col lg:flex-row-reverse gap-10 items-center mb-12">
+      <section className="mb-12 flex flex-col items-center gap-10 lg:flex-row-reverse">
         <div className="flex-1 space-y-4">
-          <h2 className="text-2xl font-semibold text-blue-800">🛠️ Вътрешни довършителни работи</h2>
-          <ul className="list-disc pl-5 text-gray-700 space-y-1">
+          <h2 className="text-2xl font-semibold text-blue-800">
+            🛠️ Вътрешни довършителни работи
+          </h2>
+          <ul className="list-disc space-y-1 pl-5 text-gray-700">
             <li>Шпакловка, боядисване и декоративни мазилки</li>
             <li>Полагане на подови настилки – паркет, ламинат, теракот</li>
             <li>Монтаж на окачени тавани и гипсокартон</li>
@@ -62,7 +71,7 @@ export default function ServicesPage() {
             alt="Вътрешни довършителни работи"
             width={600}
             height={400}
-            className="rounded-lg shadow-md object-cover w-full h-auto"
+            className="h-auto w-full rounded-lg object-cover shadow-md"
           />
         </div>
       </section>

@@ -1,32 +1,40 @@
-'use client';
-import Image from 'next/image';
+"use client";
+import Image from "next/image";
 
 export default function ServicesPage() {
   return (
-    <div className="pt-[100px] pb-10 px-4 max-w-[1280px] mx-auto text-gray-800 font-inter space-y-12">
-      <h1 className="text-3xl md:text-4xl font-bold font-montserrat text-blue-900 text-center">
+    <div className="font-inter mx-auto max-w-screen-xl space-y-12 px-4 pb-10 pt-[100px] text-gray-800">
+      <h1 className="font-montserrat text-center text-3xl font-bold text-blue-900 md:text-4xl">
         Our Services
       </h1>
 
       {/* Introduction – Boutique Construction */}
-      <section className="text-gray-700 text-center max-w-3xl mx-auto space-y-4">
+      <section className="mx-auto max-w-3xl space-y-4 text-center text-gray-700">
         <p>
-          <strong>ERMA – FAMILY Ltd.</strong> specializes in <strong>boutique construction</strong>,
-          focused on clients who value quality, personalized service, and sustainable building.
+          <strong>ERMA – FAMILY Ltd.</strong> specializes in{" "}
+          <strong>boutique construction</strong>, focused on clients who value
+          quality, personalized service, and sustainable building.
         </p>
         <p>
-          We prefer to work on <strong>private homes (from foundation to turnkey)</strong> and <strong>small residential buildings</strong>,
-          where we can apply custom solutions and a craftsmanship approach.  
-          Upon request, we can also build a <strong>smart home</strong> – with automated lighting, climate, security, and mobile control.
+          We prefer to work on{" "}
+          <strong>private homes (from foundation to turnkey)</strong> and{" "}
+          <strong>small residential buildings</strong>, where we can apply
+          custom solutions and a craftsmanship approach. Upon request, we can
+          also build a <strong>smart home</strong> – with automated lighting,
+          climate, security, and mobile control.
         </p>
       </section>
 
       {/* Building Construction */}
-      <section className="flex flex-col lg:flex-row gap-10 items-center">
+      <section className="flex flex-col items-center gap-10 lg:flex-row">
         <div className="flex-1 space-y-4">
-          <h2 className="text-2xl font-semibold text-blue-800">🏗️ Building Construction</h2>
-          <ul className="list-disc pl-5 text-gray-700 space-y-1">
-            <li>Design and construction of residential and commercial buildings</li>
+          <h2 className="text-2xl font-semibold text-blue-800">
+            🏗️ Building Construction
+          </h2>
+          <ul className="list-disc space-y-1 pl-5 text-gray-700">
+            <li>
+              Design and construction of residential and commercial buildings
+            </li>
             <li>Execution of structural work and finishing works</li>
             <li>Installation of facade systems and roofing structures</li>
             <li>Installation of electrical and plumbing systems</li>
@@ -39,16 +47,18 @@ export default function ServicesPage() {
             alt="Building Construction"
             width={600}
             height={400}
-            className="rounded-lg shadow-md object-cover w-full h-auto"
+            className="h-auto w-full rounded-lg object-cover shadow-md"
           />
         </div>
       </section>
 
       {/* Interior Finishing Works */}
-      <section className="flex flex-col lg:flex-row-reverse gap-10 items-center mb-12">
+      <section className="mb-12 flex flex-col items-center gap-10 lg:flex-row-reverse">
         <div className="flex-1 space-y-4">
-          <h2 className="text-2xl font-semibold text-blue-800">🛠️ Interior Finishing Works</h2>
-          <ul className="list-disc pl-5 text-gray-700 space-y-1">
+          <h2 className="text-2xl font-semibold text-blue-800">
+            🛠️ Interior Finishing Works
+          </h2>
+          <ul className="list-disc space-y-1 pl-5 text-gray-700">
             <li>Plastering, painting, and decorative plasters</li>
             <li>Flooring installation – parquet, laminate, tile</li>
             <li>Installation of suspended ceilings and drywall</li>
@@ -62,7 +72,7 @@ export default function ServicesPage() {
             alt="Interior Finishing Works"
             width={600}
             height={400}
-            className="rounded-lg shadow-md object-cover w-full h-auto"
+            className="h-auto w-full rounded-lg object-cover shadow-md"
           />
         </div>
       </section>
