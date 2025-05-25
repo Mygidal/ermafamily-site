@@ -1,18 +1,70 @@
 'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
+const navLabels = {
+  bg: {
+    about: 'ЗА НАС',
+    team: 'НАШИЯТ ЕКИП',
+    services: 'УСЛУГИ',
+    pricing: 'ЦЕНИ',
+    gallery: 'ГАЛЕРИЯ',
+    contact: 'КОНТАКТИ',
+    privacy: 'ПОВЕРИТЕЛНОСТ',
+    terms: 'ОБЩИ УСЛОВИЯ',
+    rights: 'Всички права запазени.',
+    address: 'София, кв. „Овча купел“, ул. 692, №12',
+  },
+  en: {
+    about: 'ABOUT',
+    team: 'OUR TEAM',
+    services: 'SERVICES',
+    pricing: 'PRICING',
+    gallery: 'GALLERY',
+    contact: 'CONTACT',
+    privacy: 'PRIVACY',
+    terms: 'TERMS',
+    rights: 'All rights reserved.',
+    address: 'Sofia, Ovcha Kupel District, 692nd Street, №12',
+  },
+  de: {
+    about: 'ÜBER UNS',
+    team: 'TEAM',
+    services: 'LEISTUNGEN',
+    pricing: 'PREISE',
+    gallery: 'GALERIE',
+    contact: 'KONTAKT',
+    privacy: 'DATENSCHUTZ',
+    terms: 'AGB',
+    rights: 'Alle Rechte vorbehalten.',
+    address: 'Sofia, Stadtteil Ovcha Kupel, Straße 692, Nr. 12',
+  }
+};
+
+const navOrder = ['about', 'team', 'services', 'pricing', 'gallery', 'contact', 'privacy', 'terms'];
 
 export default function Footer() {
+  const pathname = usePathname();
+
+  const currentLang = pathname.startsWith('/en')
+    ? 'en'
+    : pathname.startsWith('/de')
+    ? 'de'
+    : 'bg';
+
+  const t = navLabels[currentLang];
+
+  const href = (path: string) => (currentLang === 'bg' ? `/${path}` : `/${currentLang}/${path}`);
+
   return (
     <>
       {/* === МОБИЛЕН + ТАБЛЕТ ФУТЪР === */}
       <footer
-   style={{ backgroundColor: '#f4f1ec' }}  // 👈 завършва тук
-  className="flex 2xl:hidden flex-col items-center gap-3 text-black text-xs font-normal font-sans w-full px-4 py-4 text-center"
->
-
-
-
+        style={{ backgroundColor: '#f4f1ec' }}
+        className="flex 2xl:hidden flex-col items-center gap-3 text-black text-xs font-normal font-sans w-full px-4 py-4 text-center"
+      >
         {/* Социални икони */}
         <div className="flex gap-4">
           <a
@@ -21,13 +73,7 @@ export default function Footer() {
             rel="noopener noreferrer"
             aria-label="Facebook"
           >
-            <Image
-              src="/icon-facebook.png"
-              alt="Facebook"
-              width={24}
-              height={24}
-              className="w-6 h-6"
-            />
+            <Image src="/icon-facebook.png" alt="Facebook" width={24} height={24} className="w-6 h-6" />
           </a>
           <a
             href="https://www.instagram.com/erma.familna/"
@@ -35,19 +81,22 @@ export default function Footer() {
             rel="noopener noreferrer"
             aria-label="Instagram"
           >
-            <Image
-              src="/icon-instagram.png"
-              alt="Instagram"
-              width={24}
-              height={24}
-              className="w-6 h-6"
-            />
+            <Image src="/icon-instagram.png" alt="Instagram" width={24} height={24} className="w-6 h-6" />
           </a>
+        </div>
+
+        {/* Навигация (показва се само на мобилни!) */}
+        <div className="flex flex-wrap justify-center gap-2 text-[10px]">
+          {navOrder.map((key) => (
+            <Link key={key} href={href(key)} className="underline">
+              {t[key as keyof typeof t]}
+            </Link>
+          ))}
         </div>
 
         {/* Адрес */}
         <a
-          href="https://www.google.bg/maps/place/кв.+Овча+купел,+ул.+„692-ра“+12,+1618+София/@42.6777594,23.2508653,799m/data=!3m2!1e3!4b1!4m6!3m5!1s0x40aa9b2fe0506391:0x58036b9c19288a11!8m2!3d42.6777556!4d23.2557362"
+          href="https://www.google.bg/maps/place/кв.+Овча+купел,+ул.+„692-ра“+12,+1618+София"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-2 text-[10px]"
@@ -59,38 +108,34 @@ export default function Footer() {
             height={16}
             className="w-[16px] h-[16px] object-contain"
           />
-          <span>София, кв. „Овча купел“, ул. 692, №12</span>
+          <span>{t.address}</span>
         </a>
 
         {/* Права */}
         <div className="text-[8px] leading-none">
-          © {new Date().getFullYear()} ЕРМА – ФАМИЛНА ООД. Всички права запазени.
+          © {new Date().getFullYear()} ЕРМА – ФАМИЛНА ООД. {t.rights}
         </div>
       </footer>
 
       {/* === ДЕСКТОП ФУТЪР === */}
       <footer className="hidden 2xl:flex relative bg-stone-300 text-black font-normal font-sans w-full h-10 items-center justify-between px-4 py-2 text-[10px]">
-
         {/* Лява част: права */}
         <div className="text-[8px] leading-none">
-          © {new Date().getFullYear()} ЕРМА – ФАМИЛНА ООД. Всички права запазени.
+          © {new Date().getFullYear()} ЕРМА – ФАМИЛНА ООД. {t.rights}
         </div>
 
         {/* Център: НАВИГАЦИЯ С РАБОТЕЩИ ЛИНКОВЕ */}
         <div className="flex flex-wrap gap-3">
-          <Link href="/about">ЗА НАС</Link>
-          <Link href="/team">НАШИЯТ ЕКИП</Link>
-          <Link href="/services">УСЛУГИ</Link>
-          <Link href="/pricing">ЦЕНИ</Link>
-          <Link href="/gallery">ГАЛЕРИЯ</Link>
-          <Link href="/contact">КОНТАКТИ</Link>
-          <Link href="/privacy">ПОВЕРИТЕЛНОСТ</Link>
-          <Link href="/terms">ОБЩИ УСЛОВИЯ</Link>
+          {navOrder.map((key) => (
+            <Link key={key} href={href(key)}>
+              {t[key as keyof typeof t]}
+            </Link>
+          ))}
         </div>
 
-        {/* Дясна част: адрес с Google Maps линк */}
+        {/* Дясна част: адрес */}
         <a
-          href="https://www.google.bg/maps/place/кв.+Овча+купел,+ул.+„692-ра“+12,+1618+София/@42.6777594,23.2508653,799m/data=!3m2!1e3!4b1!4m6!3m5!1s0x40aa9b2fe0506391:0x58036b9c19288a11!8m2!3d42.6777556!4d23.2557362"
+          href="https://www.google.bg/maps/place/кв.+Овча+купел,+ул.+„692-ра“+12,+1618+София"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-2 whitespace-nowrap"
@@ -102,7 +147,7 @@ export default function Footer() {
             height={16}
             className="w-[16px] h-[16px] object-contain"
           />
-          <span>София, кв. „Овча купел“, ул. 692, №12</span>
+          <span>{t.address}</span>
         </a>
       </footer>
     </>
