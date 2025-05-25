@@ -1,4 +1,5 @@
 'use client';
+
 import Image from 'next/image';
 import { useEffect } from 'react';
 
@@ -64,23 +65,23 @@ export default function TeamPage() {
       <section className="text-gray-800 space-y-4">
         <h2 className="text-2xl font-bold text-blue-800">🧱 Tran Region – Cradle of Builders</h2>
         <p>
-          Tsvetanka comes from the <strong>Tran region</strong> – a raw and majestic area known as <strong>the source of some of Bulgaria's best formwork masters and builders</strong>. A place where the stone speaks and craftsmanship is inherited by birth.
+          Tsvetanka comes from the <strong>Tran region</strong> – a raw and majestic area known as <strong>the source of some of Bulgaria&apos;s best formwork masters and builders</strong>. A place where the stone speaks and craftsmanship is inherited by birth.
         </p>
         <p>
-          Her father, <strong>Stoil Trendafilov †</strong>, not only passed down the craft’s values, but also left a mark in national history as <strong>head of the construction of the National Palace of Culture (NDK)</strong> in Sofia.
+          Her father, <strong>Stoil Trendafilov †</strong>, not only passed down the craft&apos;s values, but also left a mark in national history as <strong>head of the construction of the National Palace of Culture (NDK)</strong> in Sofia.
         </p>
       </section>
 
       <section className="text-gray-800 space-y-4">
         <h2 className="text-2xl font-bold text-blue-800">🛠 The Dupnitsa Spirit – Resilient and Visionary</h2>
         <p>
-          Tsvetanka’s husband, <strong>Georgi Yovev †</strong>, was from the <strong>Dupnitsa region</strong>. He founded "GECEBOMI" Ltd. – one of the leading companies in Eastern Bulgaria, built on vision, integrity, and respect.
+          Tsvetanka&apos;s husband, <strong>Georgi Yovev †</strong>, was from the <strong>Dupnitsa region</strong>. He founded &quot;GECEBOMI&quot; Ltd. – one of the leading companies in Eastern Bulgaria, built on vision, integrity, and respect.
         </p>
         <p>
-          In that same tradition was <strong>Alexander Alexandrov †</strong> – a long-time technical team leader from Dupnitsa, inspector for European projects, and key contributor to <strong>Sofia Airport Terminal 2</strong> and many infrastructure projects. His son, <strong>Andrey Alexandrov</strong>, now leads ERMA’s structural division with the same precision and responsibility.
+          In that same tradition was <strong>Alexander Alexandrov †</strong> – a long-time technical team leader from Dupnitsa, inspector for European projects, and key contributor to <strong>Sofia Airport Terminal 2</strong> and many infrastructure projects. His son, <strong>Andrey Alexandrov</strong>, now leads ERMA&apos;s structural division with the same precision and responsibility.
         </p>
         <p>
-          Today, their sons – <strong>Boyan Georgiev Yovev</strong> (investor and partner via "H5M GROUP" and "HIKS 5 GROUP") and <strong>Andrey Alexandrov</strong> – continue their legacy.
+          Today, their sons – <strong>Boyan Georgiev Yovev</strong> (investor and partner via &quot;H5M GROUP&quot; and &quot;HIKS 5 GROUP&quot;) and <strong>Andrey Alexandrov</strong> – continue their legacy.
         </p>
       </section>
 
@@ -113,7 +114,7 @@ export default function TeamPage() {
           In memory of <strong>Stoil Trendafilov</strong> – builder from the Tran region, father, grandfather, great-grandfather, and head of the NDK project. A master of conscience, a founder by mission.
         </p>
         <p>
-          In memory of <strong>Georgi Yovev</strong> – builder and entrepreneur from Dupnitsa, founder of "GECEBOMI", husband, father, and inspiration.
+          In memory of <strong>Georgi Yovev</strong> – builder and entrepreneur from Dupnitsa, founder of &quot;GECEBOMI&quot;, husband, father, and inspiration.
         </p>
         <p>
           In memory of <strong>Alexander Alexandrov</strong> – a leader in structural construction from Dupnitsa, father, and an example of dedication, strength, and loyalty to the craft.

@@ -1,7 +1,7 @@
 export default function TermsPage() {
   return (
-    <div className="pt-[100px] pb-10 px-4 max-w-[960px] mx-auto text-gray-800 font-inter space-y-6">
-      <h1 className="text-3xl md:text-4xl font-bold font-montserrat text-blue-900 text-center mb-6">
+    <div className="pt-[100px] pb-10 px-4 max-w-screen-md mx-auto text-gray-800 space-y-6">
+      <h1 className="text-3xl md:text-4xl font-bold text-blue-900 text-center mb-6">
         Terms and Conditions
       </h1>
 
@@ -21,7 +21,7 @@ export default function TermsPage() {
       </p>
 
       <p>
-        For questions or more information, please contact us through the “Contact” section.
+        For questions or more information, please contact us through the &quot;Contact&quot; section.
       </p>
     </div>
   );

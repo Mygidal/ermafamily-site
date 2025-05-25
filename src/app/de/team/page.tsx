@@ -74,19 +74,18 @@ export default function TeamPage() {
       <section className="text-gray-800 space-y-4">
         <h2 className="text-2xl font-bold text-blue-800">🛠 Der Geist von Dupniza – Beständig und unternehmerisch</h2>
         <p>
-          Tsvetankas Ehemann, <strong>Georgi Yovev †</strong>, stammt aus der <strong>Region Dupniza</strong>. Er gründete „GECEBOMI“ GmbH – eines der führenden Bauunternehmen in Ostbulgarien mit Vision, Integrität und Ansehen.
+          Tsvetankas Ehemann, <strong>Georgi Yovev †</strong>, stammt aus der <strong>Region Dupniza</strong>. Er gründete "GECEBOMI" GmbH – eines der führenden Bauunternehmen in Ostbulgarien mit Vision, Integrität und Ansehen.
         </p>
         <p>
           In dieser Tradition stand auch <strong>Alexander Alexandrov †</strong> – Altmeister im Rohbau aus Dupniza, langjähriger Gruppenleiter, Prüfer europäischer Projekte, mit zentraler Rolle beim <strong>Terminal 2 des Flughafens Sofia</strong> sowie vielen Infrastrukturprojekten. Sein Sohn <strong>Andrey Alexandrov</strong> leitet heute den Rohbau bei ERMA mit derselben Präzision und Verantwortung.
         </p>
         <p>
-          Heute führen ihre Söhne – <strong>Boyan Georgiev Yovev</strong> (Investor und Partner durch „H5M GROUP“ und „HIKS 5 GROUP“) und <strong>Andrey Alexandrov</strong> – das Erbe fort.
+          Heute führen ihre Söhne – <strong>Boyan Georgiev Yovev</strong> (Investor und Partner durch "H5M GROUP" und "HIKS 5 GROUP") und <strong>Andrey Alexandrov</strong> – das Erbe fort.
         </p>
       </section>
 
       <section>
         <h2 className="text-2xl font-bold text-blue-800 text-center mt-12 mb-6">👷 Unser aktuelles Team</h2>
-
         <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3">
           {teamMembers.map((member) => (
             <div
@@ -113,7 +112,7 @@ export default function TeamPage() {
           In Erinnerung an <strong>Stoil Trendafilov</strong> – Bauherr aus der Region Tran, Vater, Großvater, Urgroßvater und Bauleiter des NDK. Ein Meister mit Gewissen, ein Gründer mit Mission.
         </p>
         <p>
-          In Erinnerung an <strong>Georgi Yovev</strong> – Bauunternehmer aus der Region Dupniza, Gründer von „GECEBOMI“, Ehemann, Vater und Inspiration.
+          In Erinnerung an <strong>Georgi Yovev</strong> – Bauunternehmer aus der Region Dupniza, Gründer von "GECEBOMI", Ehemann, Vater und Inspiration.
         </p>
         <p>
           In Erinnerung an <strong>Alexander Alexandrov</strong> – Altmeister des Rohbaus aus Dupniza, Vater und Vorbild für Arbeit, Stärke und Treue zum Handwerk.
