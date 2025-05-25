@@ -7,14 +7,14 @@ module.exports = {
     "tailwindcss/no-custom-classname": "warn",
     "tailwindcss/no-unnecessary-arbitrary-value": "warn",
     "@next/next/no-img-element": "warn",
-    "react/no-unescaped-entities": "error"
+    "react/no-unescaped-entities": "error",
   },
   settings: {
     tailwindcss: {
       callees: ["classnames", "clsx", "ctl"],
       config: "tailwind.config.js",
       removeDuplicates: true,
-      whitelist: ["font-inter", "font-montserrat"]
-    }
-  }
-}
+      whitelist: ["font-inter", "font-montserrat"],
+    },
+  },
+};
