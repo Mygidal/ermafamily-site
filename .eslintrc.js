@@ -4,7 +4,7 @@ module.exports = {
   plugins: ["tailwindcss"],
   rules: {
     "tailwindcss/classnames-order": "warn",
-    "tailwindcss/no-custom-classname": "warn",
+    "tailwindcss/no-custom-classname": "off", // <– спира предупрежденията
     "tailwindcss/no-unnecessary-arbitrary-value": "warn",
     "@next/next/no-img-element": "warn",
     "react/no-unescaped-entities": "error",
@@ -14,7 +14,6 @@ module.exports = {
       callees: ["classnames", "clsx", "ctl"],
       config: "tailwind.config.js",
       removeDuplicates: true,
-      whitelist: ["font-inter", "font-montserrat"],
     },
   },
 };

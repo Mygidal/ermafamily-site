@@ -30,8 +30,8 @@ img {
 
 @layer base {
   :root {
-    --font-inter: 'Inter', sans-serif;
-    --font-montserrat: 'Montserrat', sans-serif;
+    --font-inter: "Inter", sans-serif;
+    --font-montserrat: "Montserrat", sans-serif;
   }
 
   body {

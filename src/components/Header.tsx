@@ -89,9 +89,11 @@ export default function Header() {
           aria-label="Home"
           className="absolute left-1/2 z-0 -translate-x-1/2"
         >
-          <img
-            src="/ЕРМА ФАМИЛНА.png"
+          <Image
+            src="/logo-erma-header.png"
             alt="ЕРМА"
+            width={120}
+            height={30}
             className="h-[30px] w-auto translate-y-px object-contain"
           />
         </Link>

@@ -1,179 +1,136 @@
 "use client";
 
-console.log("AIAssistant geladen");
+import { useEffect, useRef, useState } from "react";
 
-import { useState } from "react";
-import { basePrices, surcharges } from "../data/priceData";
+type Message = {
+  role: "user" | "assistant";
+  content: string;
+};
 
-export default function AIAssistant({
-  lang = "bg",
-}: {
-  lang?: "bg" | "en" | "de";
-}) {
-  const [type, setType] = useState("");
-  const [area, setArea] = useState("");
-  const [hasBasement, setHasBasement] = useState(false);
-  const [hasGarage, setHasGarage] = useState(false);
-  const [terrainHard, setTerrainHard] = useState(false);
-  const [result, setResult] = useState<string | null>(null);
+export default function AIAssistant() {
+  const [file, setFile] = useState<File | null>(null);
+  const [question, setQuestion] = useState("");
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      role: "assistant",
+      content: "Здравей! Аз съм ERMA AI. С какво мога да помогна?",
+    },
+  ]);
+  const [status, setStatus] = useState<"idle" | "sending" | "error">("idle");
 
-  const labels = {
-    bg: {
-      title: "AI Офертант – изчисли ориентировъчна цена",
-      type: "Тип обект",
-      select: "-- Избери --",
-      area: "Квадратура (м²)",
-      basement: "Има сутерен",
-      garage: "Включва гараж",
-      terrain: "Труден терен (достъп или наклон)",
-      calculate: "Изчисли офертата",
-      error: "Моля, попълнете валидна квадратура и тип обект.",
-      result: (sum: number, area: string, type: string) =>
-        `Очаквана стойност: ~${sum.toLocaleString()} лв. за ${area} м² (${type})`,
-    },
-    en: {
-      title: "AI Estimator – Calculate Approximate Price",
-      type: "Building Type",
-      select: "-- Select --",
-      area: "Area (m²)",
-      basement: "Includes basement",
-      garage: "Includes garage",
-      terrain: "Difficult terrain (access or slope)",
-      calculate: "Calculate",
-      error: "Please enter a valid area and building type.",
-      result: (sum: number, area: string, type: string) =>
-        `Estimated cost: ~${sum.toLocaleString()} BGN for ${area} m² (${type})`,
-    },
-    de: {
-      title: "AI Kalkulator – Berechne den Richtpreis",
-      type: "Objekttyp",
-      select: "-- Wählen --",
-      area: "Fläche (m²)",
-      basement: "Mit Keller",
-      garage: "Mit Garage",
-      terrain: "Schwer zugängliches Gelände",
-      calculate: "Berechnen",
-      error: "Bitte geben Sie eine gültige Fläche und Objekttyp ein.",
-      result: (sum: number, area: string, type: string) =>
-        `Geschätzte Kosten: ~${sum.toLocaleString()} BGN für ${area} m² (${type})`,
-    },
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = e.target.files?.[0] || null;
+    setFile(selected);
   };
 
-  const typeLabels: Record<string, Record<string, string>> = {
-    bg: {
-      "Еднофамилна къща": "Еднофамилна къща",
-      "Многофамилна сграда": "Многофамилна сграда",
-      "Складово хале": "Складово хале",
-      "Търговски обект": "Търговски обект",
-      "Офис сграда": "Офис сграда",
-      "Селскостопанска постройка": "Селскостопанска постройка",
-    },
-    en: {
-      "Еднофамилна къща": "Single-family house",
-      "Многофамилна сграда": "Multi-family building",
-      "Складово хале": "Warehouse hall",
-      "Търговски обект": "Commercial building",
-      "Офис сграда": "Office building",
-      "Селскостопанска постройка": "Agricultural structure",
-    },
-    de: {
-      "Еднофамилна къща": "Einfamilienhaus",
-      "Многофамилна сграда": "Mehrfamilienhaus",
-      "Складово хале": "Lagerhalle",
-      "Търговски обект": "Gewerbegebäude",
-      "Офис сграда": "Bürogebäude",
-      "Селскостопанска постройка": "Landwirtschaftsgebäude",
-    },
-  };
+  const handleAsk = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!question.trim()) return;
 
-  const t = labels[lang];
-  const labelFor = (key: string) => typeLabels[lang]?.[key] || key;
+    const userMessage: Message = { role: "user", content: question };
+    setMessages((prev) => [...prev, userMessage]);
+    setQuestion("");
+    setStatus("sending");
 
-  const handleCalculate = () => {
-    if (!type || !area || isNaN(Number(area))) {
-      setResult(t.error);
-      return;
+    const formData = new FormData();
+    formData.append("question", userMessage.content);
+    if (file) formData.append("attachment", file);
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content: data.answer || "🤖 Няма отговор от ERMA AI.",
+          },
+        ]);
+        setStatus("idle");
+      } else {
+        throw new Error("Грешка при отговора.");
+      }
+    } catch (err) {
+      console.error("❌ Chat error:", err);
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: "⚠️ Възникна грешка при свързване с ERMA AI.",
+        },
+      ]);
+      setStatus("error");
     }
-
-    const basePrice = basePrices[type as keyof typeof basePrices] || 0;
-    let total = basePrice * Number(area);
-
-    if (hasBasement) total += total * surcharges["Сутерен"];
-    if (hasGarage) total += surcharges["Гараж"];
-    if (terrainHard) total += total * surcharges["Труден терен"];
-
-    setResult(t.result(Math.round(total), area, labelFor(type)));
   };
+
+  // Scroll to bottom on new message
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   return (
-    <div className="mx-auto max-w-xl rounded-xl bg-white p-6 shadow-lg">
-      <h2 className="mb-4 text-2xl font-semibold">{t.title}</h2>
+    <div className="mx-auto flex max-w-xl flex-col rounded-xl bg-white p-6 shadow-lg">
+      <h2 className="mb-4 text-center text-2xl font-semibold text-blue-900">
+        Питай ERMA AI за проекта си
+      </h2>
 
-      <div className="mb-4">
-        <label className="mb-1 block font-medium">{t.type}</label>
-        <select
-          value={type}
-          onChange={(e) => setType(e.target.value)}
-          className="w-full rounded border p-2"
-        >
-          <option value="">{t.select}</option>
-          {Object.keys(basePrices).map((key) => (
-            <option key={key} value={key}>
-              {labelFor(key)}
-            </option>
-          ))}
-        </select>
+      <div className="mb-4 max-h-[400px] flex-1 space-y-3 overflow-y-auto pr-2">
+        {messages.map((msg, idx) => (
+          <div
+            key={idx}
+            className={`flex w-full ${
+              msg.role === "user" ? "justify-end" : "justify-start"
+            }`}
+          >
+            <div
+              className={`max-w-[75%] rounded-lg px-4 py-2 text-sm ${
+                msg.role === "user"
+                  ? "bg-blue-100 text-right text-blue-900"
+                  : "bg-gray-100 text-gray-900"
+              }`}
+            >
+              <p className="mb-1 font-bold">
+                {msg.role === "user" ? "Вие:" : "ERMA AI:"}
+              </p>
+              <p>{msg.content}</p>
+            </div>
+          </div>
+        ))}
+        <div ref={scrollRef} />
       </div>
 
-      <div className="mb-4">
-        <label className="mb-1 block font-medium">{t.area}</label>
+      <form onSubmit={handleAsk} className="flex flex-col gap-3">
         <input
-          type="number"
-          value={area}
-          onChange={(e) => setArea(e.target.value)}
-          className="w-full rounded border p-2"
+          type="file"
+          name="attachment"
+          accept=".pdf,.docx,.jpg,.jpeg,.png"
+          onChange={handleFileChange}
+          className="w-full rounded border p-2 text-sm"
         />
-      </div>
 
-      <div className="mb-4 flex flex-col gap-2">
-        <label className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            checked={hasBasement}
-            onChange={() => setHasBasement(!hasBasement)}
-          />
-          {t.basement}
-        </label>
-        <label className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            checked={hasGarage}
-            onChange={() => setHasGarage(!hasGarage)}
-          />
-          {t.garage}
-        </label>
-        <label className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            checked={terrainHard}
-            onChange={() => setTerrainHard(!terrainHard)}
-          />
-          {t.terrain}
-        </label>
-      </div>
+        <textarea
+          placeholder="Задай въпрос или опиши проекта си..."
+          value={question}
+          onChange={(e) => setQuestion(e.target.value)}
+          rows={3}
+          className="w-full rounded border p-2 text-sm"
+        />
 
-      <button
-        onClick={handleCalculate}
-        className="rounded bg-blue-900 px-4 py-2 text-white transition hover:bg-blue-800"
-      >
-        {t.calculate}
-      </button>
-
-      {result && (
-        <div className="mt-4 text-lg font-semibold text-green-700">
-          {result}
-        </div>
-      )}
+        <button
+          type="submit"
+          disabled={status === "sending"}
+          className="rounded bg-green-700 px-4 py-2 text-white hover:bg-green-600"
+        >
+          {status === "sending" ? "Мисли..." : "Попитай ERMA AI"}
+        </button>
+      </form>
     </div>
   );
 }
