@@ -97,10 +97,10 @@ export default function AIAssistant({
       </h2>
 
       {/* Scrollable Chat Box */}
-      <div className="mb-2 flex-1">
+      <div className="mb-2 flex-grow">
         <div
           ref={chatContainerRef}
-          className="h-[50vh] space-y-2 overflow-y-auto scroll-smooth rounded border bg-gray-50 p-2"
+          className="max-h-[60vh] min-h-[150px] space-y-2 overflow-y-auto scroll-smooth rounded border bg-gray-50 p-2"
         >
           {messages.map((msg, idx) => (
             <div
