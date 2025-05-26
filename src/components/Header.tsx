@@ -47,11 +47,28 @@ const languages = [
   { code: "de", label: "DE" },
 ];
 
+interface Message {
+  role: "user" | "assistant";
+  content: string;
+}
+
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false); // За десктоп чат
+  const [message, setMessage] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      role: "assistant",
+      content: "Здравей! Аз съм ERMA Al. С какво мога да помогна?",
+    },
+  ]);
+  const [status, setStatus] = useState<"idle" | "sending" | "error">("idle");
   const menuRef = useRef<HTMLDivElement>(null);
   const langRef = useRef<HTMLDivElement>(null);
+  const chatRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
   const currentLang = pathname.startsWith("/en")
@@ -70,10 +87,72 @@ export default function Header() {
       if (langRef.current && !langRef.current.contains(event.target as Node)) {
         setLangOpen(false);
       }
+      if (chatRef.current && !chatRef.current.contains(event.target as Node)) {
+        setChatOpen(false);
+      }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    if (messages.length > 1 && chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = e.target.files?.[0] || null;
+    setFile(selected);
+  };
+
+  const handleMessageSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!message.trim()) return;
+
+    const userMessage: Message = { role: "user", content: message };
+    setMessages((prev) => [...prev, userMessage]);
+    setMessage("");
+    setStatus("sending");
+
+    const formData = new FormData();
+    formData.append("question", userMessage.content);
+    formData.append("lang", currentLang);
+    if (file) formData.append("attachment", file);
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content: data.answer || "🤖 Няма отговор от ERMA Al.",
+          },
+        ]);
+        setStatus("idle");
+        setFile(null);
+      } else {
+        throw new Error("Грешка при отговора.");
+      }
+    } catch (err) {
+      console.error("❌ Chat error:", err);
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: "⚠️ Възникна грешка при свързване с ERMA Al.",
+        },
+      ]);
+      setStatus("error");
+    }
+  };
 
   return (
     <header className="fixed left-0 top-0 z-50 h-[54px] w-full border-b border-blue-100 bg-[#f4f1ec] md:h-[80px]">
@@ -233,7 +312,7 @@ export default function Header() {
           })}
         </nav>
 
-        {/* ЕЗИЦИ ВДЯСНО */}
+        {/* ЕЗИЦИ ВДЯСНО + ERMA Al бутон */}
         <div className="flex items-center gap-[6px]">
           {languages.map(({ code, label }) => (
             <Link key={code} href={code === "bg" ? "/" : `/${code}`}>
@@ -246,6 +325,135 @@ export default function Header() {
               />
             </Link>
           ))}
+
+          <div className="relative ml-4" ref={chatRef}>
+            <button
+              onClick={() => setChatOpen(!chatOpen)}
+              className="flex size-10 animate-pulse items-center justify-center rounded-full bg-gradient-to-r from-blue-300 to-blue-400 text-[10px] text-white shadow-lg hover:from-blue-400 hover:to-blue-500"
+            >
+              ERMA Al
+            </button>
+            {chatOpen && (
+              <div className="absolute right-0 top-[50px] z-[999] w-[90vw] max-w-[400px] rounded-xl border border-blue-100 bg-white p-4 shadow-md">
+                <div className="mb-4 flex items-center justify-between border-b p-2 shadow-sm">
+                  <h3 className="text-lg font-semibold text-blue-900">
+                    {currentLang === "bg" && "Питай ERMA Al за проекта си"}
+                    {currentLang === "en" && "Ask ERMA Al about your project"}
+                    {currentLang === "de" && "Frage ERMA Al zu deinem Projekt"}
+                  </h3>
+                  <button
+                    onClick={() => setChatOpen(false)}
+                    className="text-sm text-gray-500 underline"
+                  >
+                    ✕{" "}
+                    {currentLang === "bg"
+                      ? "Затвори"
+                      : currentLang === "en"
+                        ? "Close"
+                        : "Schließen"}
+                  </button>
+                </div>
+                <div className="mb-4">
+                  <div
+                    ref={chatContainerRef}
+                    className="h-[300px] space-y-3 overflow-y-auto scroll-smooth rounded border bg-gray-50 p-3 pr-2"
+                  >
+                    {messages.map((msg, index) => (
+                      <div
+                        key={index}
+                        className={`flex w-full ${
+                          msg.role === "user" ? "justify-end" : "justify-start"
+                        }`}
+                      >
+                        <div
+                          className={`max-w-[75%] rounded-lg px-4 py-2 text-sm ${
+                            msg.role === "user"
+                              ? "bg-blue-100 text-right text-blue-900"
+                              : "bg-gray-100 text-gray-900"
+                          }`}
+                        >
+                          <p className="mb-1 font-bold">
+                            {msg.role === "user"
+                              ? currentLang === "bg"
+                                ? "Вие:"
+                                : currentLang === "en"
+                                  ? "You:"
+                                  : "Du:"
+                              : "ERMA Al:"}
+                          </p>
+                          <p>{msg.content}</p>
+                        </div>
+                      </div>
+                    ))}
+                    {status === "sending" && (
+                      <div className="flex justify-start">
+                        <div className="max-w-[75%] rounded-lg bg-gray-100 px-4 py-2 text-sm text-gray-900">
+                          {currentLang === "bg"
+                            ? "Мисли..."
+                            : currentLang === "en"
+                              ? "Thinking..."
+                              : "Denkt nach..."}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <form
+                  onSubmit={handleMessageSubmit}
+                  className="flex flex-col gap-2"
+                >
+                  <input
+                    type="file"
+                    name="attachment"
+                    accept=".pdf,.docx,.jpg,.jpeg,.png"
+                    onChange={handleFileChange}
+                    className="w-full rounded border p-2 text-sm"
+                  />
+                  <div className="flex items-center gap-2">
+                    <textarea
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      placeholder={
+                        currentLang === "bg"
+                          ? "Задай въпрос или опиши проекта си..."
+                          : currentLang === "en"
+                            ? "Ask a question or describe your project..."
+                            : "Stelle eine Frage oder beschreibe dein Projekt..."
+                      }
+                      className="h-12 w-full resize-none rounded-lg border border-blue-200 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      disabled={status === "sending"}
+                    />
+                    <button
+                      type="submit"
+                      className="animate-pulse rounded-full bg-gradient-to-r from-blue-300 to-blue-400 p-3 text-white shadow-lg hover:from-blue-400 hover:to-blue-500"
+                      disabled={status === "sending"}
+                    >
+                      <svg
+                        className="size-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                        />
+                      </svg>
+                      <span className="sr-only">
+                        {currentLang === "bg"
+                          ? "Изпрати"
+                          : currentLang === "en"
+                            ? "Send"
+                            : "Senden"}
+                      </span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </header>

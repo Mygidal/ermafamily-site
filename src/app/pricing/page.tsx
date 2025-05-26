@@ -1,7 +1,6 @@
 ﻿"use client";
 
 import { useState } from "react";
-import AIAssistant from "../../components/AIAssistant";
 
 export default function PriceCalculator() {
   const [status, setStatus] = useState<
@@ -46,7 +45,7 @@ export default function PriceCalculator() {
         Цени на строителство
       </h2>
 
-      <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-3">
+      <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2">
         {/* === БЛОК 1: ЦЕНИ === */}
         <div className="flex h-full min-h-[620px] flex-col justify-start rounded-lg border border-gray-200 bg-white p-6 shadow">
           <h3 className="mb-4 text-xl font-semibold">
@@ -64,19 +63,12 @@ export default function PriceCalculator() {
           </p>
         </div>
 
-        {/* === БЛОК 2: AI ОФЕРТАНТ === */}
-        <div className="flex h-full min-h-[620px] flex-col justify-start rounded-lg border border-gray-200 bg-white p-6 shadow">
-          <h3 className="mb-2 text-center text-lg font-bold text-blue-900">
-            AI Офертант
-          </h3>
-          <AIAssistant />
-        </div>
-
         {/* === БЛОК 3: ФОРМА === */}
         <div className="flex h-full min-h-[620px] flex-col justify-start rounded-lg border border-gray-200 bg-white p-6 shadow">
           <h3 className="mb-2 text-center text-lg font-bold text-blue-900">
             Запитване
           </h3>
+
           <form
             onSubmit={handleSubmit}
             className="flex flex-col gap-3"

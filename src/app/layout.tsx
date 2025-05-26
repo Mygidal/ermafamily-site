@@ -1,6 +1,8 @@
 import "../globals.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import AIAssistantFloating from "../components/AIAssistantFloating";
+import { ChatProvider } from "../context/ChatContext"; // 🧠
 
 import { Inter, Montserrat } from "next/font/google";
 
@@ -26,11 +28,20 @@ export default function RootLayout({
       <body
         className={` ${inter.variable} ${montserrat.variable} flex min-h-screen flex-col overflow-x-hidden bg-hero-pattern bg-cover bg-center bg-no-repeat font-sans text-blue-900`}
       >
-        <Header />
-        <main className="w-full max-w-full grow overflow-x-hidden">
-          {children}
-        </main>
-        <Footer />
+        <ChatProvider>
+          <Header />
+          <main className="w-full max-w-full grow overflow-x-hidden">
+            {children}
+          </main>
+
+          {/* 💬 Мобилен бутон за AI */}
+          <div className="lg:hidden">
+            <AIAssistantFloating />
+          </div>
+
+          {/* 💬 Десктоп бутон се отваря чрез Header → openChat() */}
+          <Footer />
+        </ChatProvider>
       </body>
     </html>
   );

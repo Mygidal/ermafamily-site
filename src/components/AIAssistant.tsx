@@ -1,7 +1,5 @@
 "use client";
 
-"use client";
-
 import { useEffect, useRef, useState } from "react";
 
 type Message = {
@@ -91,18 +89,18 @@ export default function AIAssistant({
   }, [messages]);
 
   return (
-    <div className="mx-auto flex max-w-xl flex-col rounded-xl bg-white p-6 shadow-lg">
-      <h2 className="mb-4 text-center text-2xl font-semibold text-blue-900">
+    <div className="flex h-full max-w-full flex-col">
+      <h2 className="mb-2 text-center text-xl font-semibold text-blue-900">
         {lang === "bg" && "Питай ERMA AI за проекта си"}
         {lang === "en" && "Ask ERMA AI about your project"}
         {lang === "de" && "Frage ERMA AI zu deinem Projekt"}
       </h2>
 
       {/* Scrollable Chat Box */}
-      <div className="mb-4">
+      <div className="mb-2 flex-1">
         <div
           ref={chatContainerRef}
-          className="h-[320px] space-y-3 overflow-y-auto scroll-smooth rounded border bg-gray-50 p-3 pr-2"
+          className="h-[50vh] space-y-2 overflow-y-auto scroll-smooth rounded border bg-gray-50 p-2"
         >
           {messages.map((msg, idx) => (
             <div
@@ -110,7 +108,7 @@ export default function AIAssistant({
               className={`flex w-full ${msg.role === "user" ? "justify-end" : "justify-start"}`}
             >
               <div
-                className={`max-w-[75%] rounded-lg px-4 py-2 text-sm ${
+                className={`max-w-[85%] rounded-lg px-3 py-1 text-sm ${
                   msg.role === "user"
                     ? "bg-blue-100 text-right text-blue-900"
                     : "bg-gray-100 text-gray-900"
@@ -134,13 +132,13 @@ export default function AIAssistant({
       </div>
 
       {/* Form */}
-      <form onSubmit={handleAsk} className="flex flex-col gap-3">
+      <form onSubmit={handleAsk} className="flex flex-col gap-2">
         <input
           type="file"
           name="attachment"
           accept=".pdf,.docx,.jpg,.jpeg,.png"
           onChange={handleFileChange}
-          className="w-full rounded border p-2 text-sm"
+          className="w-full rounded border p-1 text-sm"
         />
 
         <textarea
@@ -153,14 +151,14 @@ export default function AIAssistant({
           }
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
-          rows={3}
+          rows={2}
           className="w-full rounded border p-2 text-sm"
         />
 
         <button
           type="submit"
           disabled={status === "sending"}
-          className="rounded bg-green-700 px-4 py-2 text-white hover:bg-green-600"
+          className="animate-pulse rounded bg-gradient-to-r from-blue-300 to-blue-400 px-4 py-2 text-white shadow-lg hover:from-blue-400 hover:to-blue-500"
         >
           {status === "sending"
             ? lang === "bg"
