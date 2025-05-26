@@ -18,7 +18,7 @@ export default function AIAssistantFloating() {
       )}
 
       {open && (
-        <div className="fixed inset-0 z-50 flex h-full flex-col bg-white shadow-lg">
+        <div className="fixed inset-0 z-50 flex h-full flex-col overflow-hidden bg-white shadow-lg">
           <div className="flex items-center justify-between border-b p-4 shadow-sm">
             <h2 className="text-lg font-semibold text-blue-900">ERMA AI</h2>
             <button
