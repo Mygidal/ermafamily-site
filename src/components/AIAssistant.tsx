@@ -97,10 +97,10 @@ export default function AIAssistant({
       </h2>
 
       {/* Scrollable Chat Box */}
-      <div className="mb-2 flex-grow">
+      <div className="mb-2">
         <div
           ref={chatContainerRef}
-          className="max-h-[60vh] min-h-[150px] space-y-2 overflow-y-auto scroll-smooth rounded border bg-gray-50 p-2"
+          className="max-h-[50vh] min-h-[150px] w-full space-y-2 overflow-y-auto overflow-x-hidden scroll-smooth rounded border bg-gray-50 p-2"
         >
           {messages.map((msg, idx) => (
             <div
@@ -108,7 +108,7 @@ export default function AIAssistant({
               className={`flex w-full ${msg.role === "user" ? "justify-end" : "justify-start"}`}
             >
               <div
-                className={`max-w-[85%] rounded-lg px-3 py-1 text-sm ${
+                className={`max-w-[85%] break-words rounded-lg px-3 py-1 text-sm ${
                   msg.role === "user"
                     ? "bg-blue-100 text-right text-blue-900"
                     : "bg-gray-100 text-gray-900"
