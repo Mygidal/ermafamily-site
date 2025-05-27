@@ -2,7 +2,7 @@ import "../globals.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import AIAssistantFloating from "../components/AIAssistantFloating";
-import { ChatProvider } from "../context/ChatContext"; // 🧠
+import { ChatProvider } from "../context/ChatContext";
 
 import { Inter, Montserrat } from "next/font/google";
 
@@ -25,6 +25,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="bg">
+      <head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+      </head>
       <body
         className={` ${inter.variable} ${montserrat.variable} flex min-h-screen flex-col overflow-x-hidden bg-hero-pattern bg-cover bg-center bg-no-repeat font-sans text-blue-900`}
       >
@@ -35,7 +41,7 @@ export default function RootLayout({
           </main>
 
           {/* 💬 Мобилен бутон за AI */}
-          <div className="lg:hidden">
+          <div className="chat-container-wrapper lg:hidden">
             <AIAssistantFloating />
           </div>
 

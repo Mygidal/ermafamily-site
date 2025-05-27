@@ -89,26 +89,26 @@ export default function AIAssistant({
   }, [messages]);
 
   return (
-    <div className="flex h-full max-w-full flex-col">
-      <h2 className="mb-1 text-center text-lg font-semibold text-blue-900">
+    <div className="flex h-full max-w-full flex-col overflow-x-hidden">
+      <h2 className="mb-2 text-center text-xl font-semibold text-blue-900">
         {lang === "bg" && "Питай ERMA AI за проекта си"}
         {lang === "en" && "Ask ERMA AI about your project"}
         {lang === "de" && "Frage ERMA AI zu deinem Projekt"}
       </h2>
 
       {/* Scrollable Chat Box */}
-      <div className="mb-1 flex-grow">
+      <div className="mb-2 max-w-full flex-1 overflow-x-hidden">
         <div
           ref={chatContainerRef}
-          className="max-h-[50vh] min-h-[150px] w-full space-y-2 overflow-y-auto overflow-x-hidden scroll-smooth rounded border bg-gray-50 p-2"
+          className="box-border h-[300px] max-h-[50vh] space-y-2 overflow-y-auto overflow-x-hidden scroll-smooth rounded border bg-gray-50 p-2"
         >
           {messages.map((msg, idx) => (
             <div
               key={idx}
-              className={`flex w-full ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+              className={`flex w-full ${msg.role === "user" ? "justify-end" : "justify-start"} max-w-full overflow-x-hidden`}
             >
               <div
-                className={`max-w-[85%] break-words rounded-lg px-2 py-1 text-sm ${
+                className={`box-border max-w-[75%] overflow-x-hidden rounded-lg px-3 py-1 text-sm ${
                   msg.role === "user"
                     ? "bg-blue-100 text-right text-blue-900"
                     : "bg-gray-100 text-gray-900"
@@ -123,7 +123,9 @@ export default function AIAssistant({
                         : "You:"
                     : "ERMA AI:"}
                 </p>
-                <p>{msg.content}</p>
+                <p className="overflow-wrap anywhere white-space-normal break-all">
+                  {msg.content}
+                </p>
               </div>
             </div>
           ))}
@@ -132,47 +134,49 @@ export default function AIAssistant({
       </div>
 
       {/* Form */}
-      <form onSubmit={handleAsk} className="flex flex-col gap-1">
-        <input
-          type="file"
-          name="attachment"
-          accept=".pdf,.docx,.jpg,.jpeg,.png"
-          onChange={handleFileChange}
-          className="w-full rounded border p-1 text-sm"
-        />
+      <div className="max-w-full overflow-x-hidden">
+        <form onSubmit={handleAsk} className="flex flex-col gap-2">
+          <input
+            type="file"
+            name="attachment"
+            accept=".pdf,.docx,.jpg,.jpeg,.png"
+            onChange={handleFileChange}
+            className="w-full rounded border p-1 text-sm"
+          />
 
-        <textarea
-          placeholder={
-            lang === "bg"
-              ? "Задай въпрос или опиши проекта си..."
-              : lang === "de"
-                ? "Stelle eine Frage oder beschreibe dein Projekt..."
-                : "Ask a question or describe your project..."
-          }
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-          rows={1}
-          className="w-full rounded border p-1 text-sm"
-        />
+          <textarea
+            placeholder={
+              lang === "bg"
+                ? "Задай въпрос или опиши проекта си..."
+                : lang === "de"
+                  ? "Stelle eine Frage oder beschreibe dein Projekt..."
+                  : "Ask a question or describe your project..."
+            }
+            value={question}
+            onChange={(e) => setQuestion(e.target.value)}
+            rows={2}
+            className="w-full rounded border p-2 text-sm"
+          />
 
-        <button
-          type="submit"
-          disabled={status === "sending"}
-          className="animate-pulse rounded bg-gradient-to-r from-blue-300 to-blue-400 px-4 py-1 text-white shadow-lg hover:from-blue-400 hover:to-blue-500"
-        >
-          {status === "sending"
-            ? lang === "bg"
-              ? "Мисли..."
-              : lang === "de"
-                ? "Denkt nach..."
-                : "Thinking..."
-            : lang === "bg"
-              ? "Попитай ERMA AI"
-              : lang === "de"
-                ? "Frage ERMA AI"
-                : "Ask ERMA AI"}
-        </button>
-      </form>
+          <button
+            type="submit"
+            disabled={status === "sending"}
+            className="animate-pulse rounded bg-gradient-to-r from-blue-300 to-blue-400 px-4 py-2 text-white shadow-lg hover:from-blue-400 hover:to-blue-500"
+          >
+            {status === "sending"
+              ? lang === "bg"
+                ? "Мисли..."
+                : lang === "de"
+                  ? "Denkt nach..."
+                  : "Thinking..."
+              : lang === "bg"
+                ? "Попитай ERMA AI"
+                : lang === "de"
+                  ? "Frage ERMA AI"
+                  : "Ask ERMA AI"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

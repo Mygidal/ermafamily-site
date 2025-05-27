@@ -28,6 +28,12 @@ img {
   @apply block select-none;
 }
 
+/* Специфично правило за чат контейнер */
+.chat-container-wrapper {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 @layer base {
   :root {
     --font-inter: "Inter", sans-serif;
