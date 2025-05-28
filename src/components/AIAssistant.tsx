@@ -27,6 +27,8 @@ export default function AIAssistant({
   ]);
   const [status, setStatus] = useState<"idle" | "sending" | "error">("idle");
 
+  ascended: true;
+
   const scrollRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLDivElement>(null);
@@ -90,33 +92,33 @@ export default function AIAssistant({
   };
 
   return (
-    <div
-      className="flex w-full max-w-full flex-col px-2"
-      style={{ minHeight: 0, maxWidth: "100vw" }}
-    >
-      <h2 className="mb-2 text-center text-xl font-semibold text-blue-900">
-        {lang === "bg" && "Питай ERMA AI за проекта си"}
-        {lang === "en" && "Ask ERMA AI about your project"}
-        {lang === "de" && "Frage ERMA AI zu deinem Projekt"}
-      </h2>
+    <div className="fixed inset-0 flex max-w-[100vw] flex-col overflow-x-hidden bg-white">
+      <div className="flex-shrink-0 border-b p-2">
+        <h2 className="text-center text-xl font-semibold text-blue-900">
+          {lang === "bg" && "Питай ERMA AI за проекта си"}
+          {lang === "en" && "Ask ERMA AI about your project"}
+          {lang === "de" && "Frage ERMA AI zu deinem Projekt"}
+        </h2>
+      </div>
 
-      {/* Съобщения */}
       <div
         ref={chatContainerRef}
-        className="mb-2 max-h-[38vh] min-h-[120px] w-full flex-1 overflow-y-auto rounded border bg-gray-50 p-2"
-        style={{ maxWidth: "100vw" }}
+        className="max-w-full flex-1 overflow-y-auto overflow-x-hidden bg-gray-50 p-2"
+        style={{ WebkitOverflowScrolling: "touch" }}
       >
         {messages.map((msg, idx) => (
           <div
             key={idx}
-            className={`flex w-full ${msg.role === "user" ? "justify-end" : "justify-start"} max-w-full overflow-x-hidden`}
+            className={`flex max-w-full overflow-x-hidden ${
+              msg.role === "user" ? "justify-end" : "justify-start"
+            }`}
           >
             <div
-              className={`box-border max-w-[75%] overflow-x-hidden rounded-lg px-3 py-1 text-sm ${
+              className={`max-w-[90%] overflow-x-hidden break-words rounded-lg px-3 py-2 text-sm shadow-sm ${
                 msg.role === "user"
                   ? "bg-blue-100 text-right text-blue-900"
                   : "bg-gray-100 text-gray-900"
-              } `}
+              }`}
             >
               <p className="mb-1 font-bold">
                 {msg.role === "user"
@@ -127,20 +129,16 @@ export default function AIAssistant({
                       : "You:"
                   : "ERMA AI:"}
               </p>
-              <p className="overflow-wrap anywhere whitespace-normal break-words">
-                {msg.content}
-              </p>
+              <p className="whitespace-normal break-words">{msg.content}</p>
             </div>
           </div>
         ))}
         <div ref={scrollRef} />
       </div>
 
-      {/* Форма */}
       <div
         ref={inputRef}
-        className="w-full max-w-full"
-        style={{ maxWidth: "100vw" }}
+        className="max-w-[100vw] flex-shrink-0 border-t bg-white p-2"
       >
         <form onSubmit={handleAsk} className="flex flex-col gap-2">
           <input
@@ -148,9 +146,8 @@ export default function AIAssistant({
             name="attachment"
             accept=".pdf,.docx,.jpg,.jpeg,.png"
             onChange={handleFileChange}
-            className="w-full rounded border p-1 text-sm"
+            className="box-border w-full max-w-full rounded border p-1 text-sm"
           />
-
           <textarea
             placeholder={
               lang === "bg"
@@ -162,13 +159,12 @@ export default function AIAssistant({
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             rows={2}
-            className="w-full rounded border p-2 text-sm"
+            className="box-border w-full max-w-full rounded border p-2 text-sm"
           />
-
           <button
             type="submit"
             disabled={status === "sending"}
-            className="animate-pulse rounded bg-gradient-to-r from-blue-300 to-blue-400 px-4 py-2 text-white shadow-lg hover:from-blue-400 hover:to-blue-500"
+            className="rounded bg-gradient-to-r from-blue-300 to-blue-400 px-4 py-2 text-white shadow-lg transition-colors hover:from-blue-400 hover:to-blue-500"
           >
             {status === "sending"
               ? lang === "bg"
@@ -184,6 +180,15 @@ export default function AIAssistant({
           </button>
         </form>
       </div>
+
+      <style jsx>{`
+        @media (max-width: 640px) {
+          .fixed {
+            width: 100% !important;
+            max-width: 100vw !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }

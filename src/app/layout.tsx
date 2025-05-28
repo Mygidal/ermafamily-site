@@ -3,7 +3,6 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import AIAssistantFloating from "../components/AIAssistantFloating";
 import { ChatProvider } from "../context/ChatContext";
-
 import { Inter, Montserrat } from "next/font/google";
 
 const inter = Inter({
@@ -32,22 +31,16 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={` ${inter.variable} ${montserrat.variable} flex min-h-screen flex-col overflow-x-hidden bg-hero-pattern bg-cover bg-center bg-no-repeat font-sans text-blue-900`}
-        style={{ maxWidth: "100vw" }}
+        className={`${inter.variable} ${montserrat.variable} flex min-h-screen max-w-[100vw] flex-col overflow-x-hidden bg-hero-pattern bg-cover bg-center bg-no-repeat font-sans text-blue-900`}
       >
         <ChatProvider>
           <Header />
-          <main
-            className="w-full max-w-full grow overflow-x-hidden"
-            style={{ maxWidth: "100vw", overflowX: "hidden" }}
-          >
+          <main className="w-full max-w-[100vw] grow overflow-x-hidden">
             {children}
           </main>
-
-          <div className="chat-container-wrapper lg:hidden">
+          <div className="max-w-[100vw] overflow-x-hidden lg:hidden">
             <AIAssistantFloating />
           </div>
-
           <Footer />
         </ChatProvider>
       </body>

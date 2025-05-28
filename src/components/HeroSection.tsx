@@ -54,15 +54,15 @@ export default function HeroSection() {
   return (
     <section className="w-full pt-[80px] text-blue-900">
       {/* === МОБИЛЕН + ТАБЛЕТ === */}
-      <div className="mx-auto flex max-w-screen-xl flex-col gap-6 px-4 2xl:hidden">
+      <div className="mx-auto flex max-w-[100vw] flex-col gap-4 overflow-x-hidden px-4 2xl:hidden">
         <div className="flex flex-col items-center gap-[2px] text-center">
-          <h1 className="font-heading text-[20px] font-normal leading-[1.2] text-black">
+          <h1 className="font-heading text-[20px] font-normal leading-[1.2] text-black sm:text-[24px]">
             {t.h1_1}
           </h1>
-          <h1 className="mt-[-2px] font-heading text-[20px] font-normal leading-[1.2] text-black">
+          <h1 className="mt-[-2px] font-heading text-[20px] font-normal leading-[1.2] text-black sm:text-[24px]">
             {t.h1_2}
           </h1>
-          <p className="pt-1 font-heading text-[16px] font-normal leading-tight text-black">
+          <p className="pt-1 font-heading text-[14px] font-normal leading-tight text-black sm:text-[16px]">
             {t.p}
           </p>
         </div>
@@ -72,21 +72,21 @@ export default function HeroSection() {
           alt="Right building"
           width={800}
           height={600}
-          className="w-full rounded-xl object-cover"
+          className="aspect-[4/3] w-full rounded-xl object-cover"
         />
         <Image
           src="/photo-left.png"
           alt="Left building"
           width={800}
           height={600}
-          className="w-full rounded-xl object-cover"
+          className="aspect-[4/3] w-full rounded-xl object-cover"
         />
         <Image
           src="/photo-maika.png"
           alt="Woman with plans"
           width={800}
           height={600}
-          className="mb-6 w-full rounded-xl object-cover"
+          className="mb-6 aspect-[4/3] w-full rounded-xl object-cover"
         />
       </div>
 
