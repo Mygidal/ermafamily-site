@@ -27,14 +27,13 @@ export default function AIAssistant({
   ]);
   const [status, setStatus] = useState<"idle" | "sending" | "error">("idle");
 
-  ascended: true;
-
   const scrollRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (messages.length > 1 && chatContainerRef.current) {
+    // Автоскрол до най-долу при всяко ново съобщение
+    if (messages.length > 0 && chatContainerRef.current) {
       chatContainerRef.current.scrollTop =
         chatContainerRef.current.scrollHeight;
     }
@@ -92,7 +91,11 @@ export default function AIAssistant({
   };
 
   return (
-    <div className="fixed inset-0 flex max-w-[100vw] flex-col overflow-x-hidden bg-white">
+    <div
+      // Основен контейнер: фиксиран на цял екран, колона, без хор. скрол
+      className="fixed inset-0 flex flex-col overflow-x-hidden bg-white"
+    >
+      {/* Заглавие */}
       <div className="flex-shrink-0 border-b p-2">
         <h2 className="text-center text-xl font-semibold text-blue-900">
           {lang === "bg" && "Питай ERMA AI за проекта си"}
@@ -101,20 +104,21 @@ export default function AIAssistant({
         </h2>
       </div>
 
+      {/* Чат съобщения */}
       <div
         ref={chatContainerRef}
-        className="max-w-full flex-1 overflow-y-auto overflow-x-hidden bg-gray-50 p-2"
+        className="w-full flex-1 overflow-y-auto break-words bg-gray-50 p-2"
         style={{ WebkitOverflowScrolling: "touch" }}
       >
         {messages.map((msg, idx) => (
           <div
             key={idx}
-            className={`flex max-w-full overflow-x-hidden ${
+            className={`mb-2 flex w-full ${
               msg.role === "user" ? "justify-end" : "justify-start"
             }`}
           >
             <div
-              className={`max-w-[90%] overflow-x-hidden break-words rounded-lg px-3 py-2 text-sm shadow-sm ${
+              className={`max-w-[90%] break-words rounded-lg px-3 py-2 text-sm shadow-sm ${
                 msg.role === "user"
                   ? "bg-blue-100 text-right text-blue-900"
                   : "bg-gray-100 text-gray-900"
@@ -129,24 +133,23 @@ export default function AIAssistant({
                       : "You:"
                   : "ERMA AI:"}
               </p>
-              <p className="whitespace-normal break-words">{msg.content}</p>
+              <p>{msg.content}</p>
             </div>
           </div>
         ))}
+        {/* Скрол-референтна точка */}
         <div ref={scrollRef} />
       </div>
 
-      <div
-        ref={inputRef}
-        className="max-w-[100vw] flex-shrink-0 border-t bg-white p-2"
-      >
+      {/* Инпут и бутон */}
+      <div ref={inputRef} className="flex-shrink-0 border-t bg-white p-2">
         <form onSubmit={handleAsk} className="flex flex-col gap-2">
           <input
             type="file"
             name="attachment"
             accept=".pdf,.docx,.jpg,.jpeg,.png"
             onChange={handleFileChange}
-            className="box-border w-full max-w-full rounded border p-1 text-sm"
+            className="w-full rounded border p-1 text-sm"
           />
           <textarea
             placeholder={
@@ -159,7 +162,7 @@ export default function AIAssistant({
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             rows={2}
-            className="box-border w-full max-w-full rounded border p-2 text-sm"
+            className="w-full rounded border p-2 text-sm"
           />
           <button
             type="submit"
@@ -181,6 +184,7 @@ export default function AIAssistant({
         </form>
       </div>
 
+      {/* Минимален стил за мобилни (може и без него) */}
       <style jsx>{`
         @media (max-width: 640px) {
           .fixed {
