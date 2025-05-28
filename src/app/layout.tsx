@@ -33,19 +33,21 @@ export default function RootLayout({
       </head>
       <body
         className={` ${inter.variable} ${montserrat.variable} flex min-h-screen flex-col overflow-x-hidden bg-hero-pattern bg-cover bg-center bg-no-repeat font-sans text-blue-900`}
+        style={{ maxWidth: "100vw" }}
       >
         <ChatProvider>
           <Header />
-          <main className="w-full max-w-full grow overflow-x-hidden">
+          <main
+            className="w-full max-w-full grow overflow-x-hidden"
+            style={{ maxWidth: "100vw", overflowX: "hidden" }}
+          >
             {children}
           </main>
 
-          {/* 💬 Мобилен бутон за AI */}
           <div className="chat-container-wrapper lg:hidden">
             <AIAssistantFloating />
           </div>
 
-          {/* 💬 Десктоп бутон се отваря чрез Header → openChat() */}
           <Footer />
         </ChatProvider>
       </body>
