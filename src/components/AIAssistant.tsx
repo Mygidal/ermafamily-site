@@ -31,28 +31,6 @@ export default function AIAssistant({
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLDivElement>(null);
 
-  // Динамична височина на чата (само за мобилен)
-  const [chatHeight, setChatHeight] = useState<number | undefined>(undefined);
-
-  useEffect(() => {
-    function updateChatHeight() {
-      // Само за мобилни екрани
-      if (window.innerWidth < 640 && inputRef.current) {
-        const inputH = inputRef.current.offsetHeight || 100;
-        setChatHeight(window.innerHeight - inputH - 24); // малък падинг
-      } else {
-        setChatHeight(undefined); // за desktop - нормално поведение
-      }
-    }
-    updateChatHeight();
-    window.addEventListener("resize", updateChatHeight);
-    window.addEventListener("orientationchange", updateChatHeight);
-    return () => {
-      window.removeEventListener("resize", updateChatHeight);
-      window.removeEventListener("orientationchange", updateChatHeight);
-    };
-  }, []);
-
   useEffect(() => {
     if (messages.length > 1 && chatContainerRef.current) {
       chatContainerRef.current.scrollTop =
@@ -113,10 +91,8 @@ export default function AIAssistant({
 
   return (
     <div
-      className="box-border flex h-full w-full max-w-full flex-col overflow-x-hidden px-2 sm:mx-auto sm:max-w-[500px]"
-      style={{
-        maxWidth: "100vw",
-      }}
+      className="flex w-full max-w-full flex-col px-2"
+      style={{ minHeight: 0, maxWidth: "100vw" }}
     >
       <h2 className="mb-2 text-center text-xl font-semibold text-blue-900">
         {lang === "bg" && "Питай ERMA AI за проекта си"}
@@ -124,58 +100,46 @@ export default function AIAssistant({
         {lang === "de" && "Frage ERMA AI zu deinem Projekt"}
       </h2>
 
-      {/* Scrollable Chat Box */}
-      <div className="mb-2 w-full max-w-full flex-1 overflow-x-hidden">
-        <div
-          ref={chatContainerRef}
-          className="box-border w-full max-w-full space-y-2 overflow-y-auto overflow-x-hidden scroll-smooth rounded border bg-gray-50 p-2"
-          style={
-            chatHeight
-              ? {
-                  height: chatHeight,
-                  maxHeight: chatHeight,
-                  maxWidth: "100vw",
-                }
-              : { maxWidth: "100vw" }
-          }
-        >
-          {messages.map((msg, idx) => (
+      {/* Съобщения */}
+      <div
+        ref={chatContainerRef}
+        className="mb-2 max-h-[38vh] min-h-[120px] w-full flex-1 overflow-y-auto rounded border bg-gray-50 p-2"
+        style={{ maxWidth: "100vw" }}
+      >
+        {messages.map((msg, idx) => (
+          <div
+            key={idx}
+            className={`flex w-full ${msg.role === "user" ? "justify-end" : "justify-start"} max-w-full overflow-x-hidden`}
+          >
             <div
-              key={idx}
-              className={`flex w-full ${
-                msg.role === "user" ? "justify-end" : "justify-start"
-              } max-w-full overflow-x-hidden`}
+              className={`box-border max-w-[75%] overflow-x-hidden rounded-lg px-3 py-1 text-sm ${
+                msg.role === "user"
+                  ? "bg-blue-100 text-right text-blue-900"
+                  : "bg-gray-100 text-gray-900"
+              } `}
             >
-              <div
-                className={`box-border max-w-[75%] overflow-x-hidden rounded-lg px-3 py-1 text-sm ${
-                  msg.role === "user"
-                    ? "bg-blue-100 text-right text-blue-900"
-                    : "bg-gray-100 text-gray-900"
-                } `}
-              >
-                <p className="mb-1 font-bold">
-                  {msg.role === "user"
-                    ? lang === "bg"
-                      ? "Вие:"
-                      : lang === "de"
-                        ? "Du:"
-                        : "You:"
-                    : "ERMA AI:"}
-                </p>
-                <p className="overflow-wrap anywhere whitespace-normal break-words">
-                  {msg.content}
-                </p>
-              </div>
+              <p className="mb-1 font-bold">
+                {msg.role === "user"
+                  ? lang === "bg"
+                    ? "Вие:"
+                    : lang === "de"
+                      ? "Du:"
+                      : "You:"
+                  : "ERMA AI:"}
+              </p>
+              <p className="overflow-wrap anywhere whitespace-normal break-words">
+                {msg.content}
+              </p>
             </div>
-          ))}
-          <div ref={scrollRef} />
-        </div>
+          </div>
+        ))}
+        <div ref={scrollRef} />
       </div>
 
-      {/* Form */}
+      {/* Форма */}
       <div
         ref={inputRef}
-        className="w-full max-w-full overflow-x-hidden"
+        className="w-full max-w-full"
         style={{ maxWidth: "100vw" }}
       >
         <form onSubmit={handleAsk} className="flex flex-col gap-2">
