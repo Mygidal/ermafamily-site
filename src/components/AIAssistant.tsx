@@ -207,7 +207,7 @@ export default function AIAssistant({
             ref={textareaRef}
             placeholder={
               lang === "bg"
-                ? "Задай въпрос или опиши проекта си..."
+                ? "Съобщение..."
                 : lang === "de"
                   ? "Stelle eine Frage oder beschreibe dein Projekt..."
                   : "Ask a question or describe your project..."
