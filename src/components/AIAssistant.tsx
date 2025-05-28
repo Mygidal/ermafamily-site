@@ -89,7 +89,13 @@ export default function AIAssistant({
   }, [messages]);
 
   return (
-    <div className="flex h-full max-w-full flex-col overflow-x-hidden">
+    <div
+      className="box-border flex h-full w-full max-w-full flex-col overflow-x-hidden px-2 sm:mx-auto sm:max-w-[500px]"
+      style={{
+        // mobile fix: prevent horizontal overflow always
+        maxWidth: "100vw",
+      }}
+    >
       <h2 className="mb-2 text-center text-xl font-semibold text-blue-900">
         {lang === "bg" && "Питай ERMA AI за проекта си"}
         {lang === "en" && "Ask ERMA AI about your project"}
@@ -97,22 +103,27 @@ export default function AIAssistant({
       </h2>
 
       {/* Scrollable Chat Box */}
-      <div className="mb-2 max-w-full flex-1 overflow-x-hidden">
+      <div className="mb-2 w-full max-w-full flex-1 overflow-x-hidden">
         <div
           ref={chatContainerRef}
-          className="box-border h-[300px] max-h-[50vh] space-y-2 overflow-y-auto overflow-x-hidden scroll-smooth rounded border bg-gray-50 p-2"
+          className="box-border h-[300px] max-h-[50vh] w-full max-w-full space-y-2 overflow-y-auto overflow-x-hidden scroll-smooth rounded border bg-gray-50 p-2"
+          style={{
+            maxWidth: "100vw",
+          }}
         >
           {messages.map((msg, idx) => (
             <div
               key={idx}
-              className={`flex w-full ${msg.role === "user" ? "justify-end" : "justify-start"} max-w-full overflow-x-hidden`}
+              className={`flex w-full ${
+                msg.role === "user" ? "justify-end" : "justify-start"
+              } max-w-full overflow-x-hidden`}
             >
               <div
                 className={`box-border max-w-[75%] overflow-x-hidden rounded-lg px-3 py-1 text-sm ${
                   msg.role === "user"
                     ? "bg-blue-100 text-right text-blue-900"
                     : "bg-gray-100 text-gray-900"
-                }`}
+                } `}
               >
                 <p className="mb-1 font-bold">
                   {msg.role === "user"
@@ -123,7 +134,7 @@ export default function AIAssistant({
                         : "You:"
                     : "ERMA AI:"}
                 </p>
-                <p className="overflow-wrap anywhere white-space-normal break-all">
+                <p className="overflow-wrap anywhere whitespace-normal break-words">
                   {msg.content}
                 </p>
               </div>
@@ -134,7 +145,7 @@ export default function AIAssistant({
       </div>
 
       {/* Form */}
-      <div className="max-w-full overflow-x-hidden">
+      <div className="w-full max-w-full overflow-x-hidden">
         <form onSubmit={handleAsk} className="flex flex-col gap-2">
           <input
             type="file"
