@@ -16,7 +16,8 @@ body {
   min-height: 100vh;
   width: 100%;
   max-width: 100vw;
-  overflow: hidden; /* Премахва външния скрол */
+  overflow-x: hidden; /* Запазваме само хоризонтална защита */
+  overflow-y: auto; /* Възстановяваме нормален вертикален скрол */
 }
 
 /* Линкове */
