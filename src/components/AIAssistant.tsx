@@ -29,6 +29,36 @@ export default function AIAssistant({
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLDivElement>(null);
+
+  // Динамична височина на чата (само за мобилен)
+  const [chatHeight, setChatHeight] = useState<number | undefined>(undefined);
+
+  useEffect(() => {
+    function updateChatHeight() {
+      // Само за мобилни екрани
+      if (window.innerWidth < 640 && inputRef.current) {
+        const inputH = inputRef.current.offsetHeight || 100;
+        setChatHeight(window.innerHeight - inputH - 24); // малък падинг
+      } else {
+        setChatHeight(undefined); // за desktop - нормално поведение
+      }
+    }
+    updateChatHeight();
+    window.addEventListener("resize", updateChatHeight);
+    window.addEventListener("orientationchange", updateChatHeight);
+    return () => {
+      window.removeEventListener("resize", updateChatHeight);
+      window.removeEventListener("orientationchange", updateChatHeight);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (messages.length > 1 && chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0] || null;
@@ -81,18 +111,10 @@ export default function AIAssistant({
     }
   };
 
-  useEffect(() => {
-    if (messages.length > 1 && chatContainerRef.current) {
-      chatContainerRef.current.scrollTop =
-        chatContainerRef.current.scrollHeight;
-    }
-  }, [messages]);
-
   return (
     <div
       className="box-border flex h-full w-full max-w-full flex-col overflow-x-hidden px-2 sm:mx-auto sm:max-w-[500px]"
       style={{
-        // mobile fix: prevent horizontal overflow always
         maxWidth: "100vw",
       }}
     >
@@ -106,10 +128,16 @@ export default function AIAssistant({
       <div className="mb-2 w-full max-w-full flex-1 overflow-x-hidden">
         <div
           ref={chatContainerRef}
-          className="box-border h-[300px] max-h-[50vh] w-full max-w-full space-y-2 overflow-y-auto overflow-x-hidden scroll-smooth rounded border bg-gray-50 p-2"
-          style={{
-            maxWidth: "100vw",
-          }}
+          className="box-border w-full max-w-full space-y-2 overflow-y-auto overflow-x-hidden scroll-smooth rounded border bg-gray-50 p-2"
+          style={
+            chatHeight
+              ? {
+                  height: chatHeight,
+                  maxHeight: chatHeight,
+                  maxWidth: "100vw",
+                }
+              : { maxWidth: "100vw" }
+          }
         >
           {messages.map((msg, idx) => (
             <div
@@ -145,7 +173,11 @@ export default function AIAssistant({
       </div>
 
       {/* Form */}
-      <div className="w-full max-w-full overflow-x-hidden">
+      <div
+        ref={inputRef}
+        className="w-full max-w-full overflow-x-hidden"
+        style={{ maxWidth: "100vw" }}
+      >
         <form onSubmit={handleAsk} className="flex flex-col gap-2">
           <input
             type="file"
