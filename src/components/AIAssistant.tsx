@@ -30,13 +30,24 @@ export default function AIAssistant({
 
   const router = useRouter();
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  // Автоскрол надолу при всяко ново съобщение
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop =
         chatContainerRef.current.scrollHeight;
     }
   }, [messages]);
+
+  // Динамично регулиране на височината на textarea
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = "auto"; // Нулираме височината
+      textarea.style.height = `${Math.min(textarea.scrollHeight, 120)}px`; // Ограничаваме до 120px
+    }
+  }, [question]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0] || null;
@@ -193,6 +204,7 @@ export default function AIAssistant({
           </label>
 
           <textarea
+            ref={textareaRef}
             placeholder={
               lang === "bg"
                 ? "Задай въпрос или опиши проекта си..."
@@ -204,23 +216,54 @@ export default function AIAssistant({
             onChange={(e) => setQuestion(e.target.value)}
             rows={1}
             className="flex-1 resize-none rounded-full border border-gray-300 px-4 py-1 text-base focus:outline-none focus:ring-2 focus:ring-blue-300"
+            style={{
+              minHeight: "40px",
+              maxHeight: "120px",
+              resize: "vertical",
+            }}
           />
           <button
             type="submit"
             disabled={status === "sending" || !question.trim()}
-            className="rounded bg-blue-500 px-5 py-2 font-semibold text-white shadow transition-colors hover:bg-blue-600 disabled:opacity-50"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-500 text-white shadow transition-colors hover:bg-blue-600 disabled:opacity-50"
           >
-            {status === "sending"
-              ? lang === "bg"
-                ? "Мисли..."
-                : lang === "de"
-                  ? "Denkt nach..."
-                  : "Thinking..."
-              : lang === "bg"
-                ? "Изпрати"
-                : lang === "de"
-                  ? "Senden"
-                  : "Send"}
+            {status === "sending" ? (
+              <svg
+                className="h-5 w-5 animate-spin"
+                fill="none"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v8H4z"
+                ></path>
+              </svg>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 rotate-45"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3 10l11-6 7 18-11-6-4 5z"
+                />
+              </svg>
+            )}
           </button>
         </form>
       </div>
