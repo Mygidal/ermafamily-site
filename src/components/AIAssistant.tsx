@@ -12,7 +12,6 @@ export default function AIAssistant({
 }: {
   lang?: "bg" | "en" | "de";
 }) {
-  const [file, setFile] = useState<File | null>(null);
   const [question, setQuestion] = useState("");
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -26,23 +25,14 @@ export default function AIAssistant({
     },
   ]);
   const [status, setStatus] = useState<"idle" | "sending" | "error">("idle");
-
-  const scrollRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Автоскрол до най-долу при всяко ново съобщение
-    if (messages.length > 0 && chatContainerRef.current) {
+    if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop =
         chatContainerRef.current.scrollHeight;
     }
   }, [messages]);
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selected = e.target.files?.[0] || null;
-    setFile(selected);
-  };
 
   const handleAsk = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,32 +43,23 @@ export default function AIAssistant({
     setQuestion("");
     setStatus("sending");
 
-    const formData = new FormData();
-    formData.append("question", userMessage.content);
-    formData.append("lang", lang);
-    if (file) formData.append("attachment", file);
-
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
-        body: formData,
+        body: JSON.stringify({ question: userMessage.content, lang }),
+        headers: { "Content-Type": "application/json" },
       });
 
       const data = await res.json();
-      if (res.ok) {
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: "assistant",
-            content: data.answer || "🤖 Няма отговор от ERMA AI.",
-          },
-        ]);
-        setStatus("idle");
-      } else {
-        throw new Error("Грешка при отговора.");
-      }
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: data.answer || "🤖 Няма отговор от ERMA AI.",
+        },
+      ]);
+      setStatus("idle");
     } catch (err) {
-      console.error("❌ Chat error:", err);
       setMessages((prev) => [
         ...prev,
         {
@@ -91,66 +72,46 @@ export default function AIAssistant({
   };
 
   return (
-    <div
-      // Основен контейнер: фиксиран на цял екран, колона, без хор. скрол
-      className="fixed inset-0 flex flex-col overflow-x-hidden bg-white"
-    >
-      {/* Заглавие */}
-      <div className="flex-shrink-0 border-b p-2">
-        <h2 className="text-center text-xl font-semibold text-blue-900">
-          {lang === "bg" && "Питай ERMA AI за проекта си"}
-          {lang === "en" && "Ask ERMA AI about your project"}
-          {lang === "de" && "Frage ERMA AI zu deinem Projekt"}
-        </h2>
-      </div>
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-gray-100 py-8">
+      <div className="flex w-full max-w-2xl flex-col rounded-2xl border border-gray-200 bg-white shadow-xl">
+        {/* Заглавие */}
+        <div className="border-b px-6 py-4">
+          <h2 className="text-center text-xl font-semibold text-blue-900">
+            {lang === "bg" && "Питай ERMA AI за проекта си"}
+            {lang === "en" && "Ask ERMA AI about your project"}
+            {lang === "de" && "Frage ERMA AI zu deinem Projekt"}
+          </h2>
+        </div>
 
-      {/* Чат съобщения */}
-      <div
-        ref={chatContainerRef}
-        className="w-full flex-1 overflow-y-auto break-words bg-gray-50 p-2"
-        style={{ WebkitOverflowScrolling: "touch" }}
-      >
-        {messages.map((msg, idx) => (
-          <div
-            key={idx}
-            className={`mb-2 flex w-full ${
-              msg.role === "user" ? "justify-end" : "justify-start"
-            }`}
-          >
+        {/* Чат съобщения */}
+        <div
+          ref={chatContainerRef}
+          className="flex-1 space-y-4 overflow-y-auto bg-gray-50 px-4 py-6"
+          style={{ minHeight: 400, maxHeight: 500 }}
+        >
+          {messages.map((msg, idx) => (
             <div
-              className={`max-w-[90%] break-words rounded-lg px-3 py-2 text-sm shadow-sm ${
-                msg.role === "user"
-                  ? "bg-blue-100 text-right text-blue-900"
-                  : "bg-gray-100 text-gray-900"
-              }`}
+              key={idx}
+              className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
             >
-              <p className="mb-1 font-bold">
-                {msg.role === "user"
-                  ? lang === "bg"
-                    ? "Вие:"
-                    : lang === "de"
-                      ? "Du:"
-                      : "You:"
-                  : "ERMA AI:"}
-              </p>
-              <p>{msg.content}</p>
+              <div
+                className={`max-w-[80%] rounded-xl px-4 py-2 text-base shadow-sm ${
+                  msg.role === "user"
+                    ? "rounded-br-none bg-blue-500 text-white"
+                    : "rounded-bl-none bg-gray-200 text-gray-900"
+                }`}
+              >
+                {msg.content}
+              </div>
             </div>
-          </div>
-        ))}
-        {/* Скрол-референтна точка */}
-        <div ref={scrollRef} />
-      </div>
+          ))}
+        </div>
 
-      {/* Инпут и бутон */}
-      <div ref={inputRef} className="flex-shrink-0 border-t bg-white p-2">
-        <form onSubmit={handleAsk} className="flex flex-col gap-2">
-          <input
-            type="file"
-            name="attachment"
-            accept=".pdf,.docx,.jpg,.jpeg,.png"
-            onChange={handleFileChange}
-            className="w-full rounded border p-1 text-sm"
-          />
+        {/* Инпут и бутон */}
+        <form
+          onSubmit={handleAsk}
+          className="flex items-center gap-2 border-t bg-white px-4 py-3"
+        >
           <textarea
             placeholder={
               lang === "bg"
@@ -161,13 +122,14 @@ export default function AIAssistant({
             }
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
-            rows={2}
-            className="w-full rounded border p-2 text-sm"
+            rows={1}
+            className="flex-1 resize-none rounded border border-gray-300 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-300"
+            disabled={status === "sending"}
           />
           <button
             type="submit"
-            disabled={status === "sending"}
-            className="rounded bg-gradient-to-r from-blue-300 to-blue-400 px-4 py-2 text-white shadow-lg transition-colors hover:from-blue-400 hover:to-blue-500"
+            disabled={status === "sending" || !question.trim()}
+            className="rounded bg-blue-500 px-5 py-2 font-semibold text-white shadow transition-colors hover:bg-blue-600 disabled:opacity-50"
           >
             {status === "sending"
               ? lang === "bg"
@@ -176,23 +138,13 @@ export default function AIAssistant({
                   ? "Denkt nach..."
                   : "Thinking..."
               : lang === "bg"
-                ? "Попитай ERMA AI"
+                ? "Изпрати"
                 : lang === "de"
-                  ? "Frage ERMA AI"
-                  : "Ask ERMA AI"}
+                  ? "Senden"
+                  : "Send"}
           </button>
         </form>
       </div>
-
-      {/* Минимален стил за мобилни (може и без него) */}
-      <style jsx>{`
-        @media (max-width: 640px) {
-          .fixed {
-            width: 100% !important;
-            max-width: 100vw !important;
-          }
-        }
-      `}</style>
     </div>
   );
 }
