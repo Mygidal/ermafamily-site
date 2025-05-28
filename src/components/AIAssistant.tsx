@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation"; // Добавяме за навигация при затваряне
 
 type Message = {
   role: "user" | "assistant";
@@ -12,9 +13,6 @@ export default function AIAssistant({
 }: {
   lang?: "bg" | "en" | "de";
 }) {
-  // ------------------------------
-  // Състояния
-  // ------------------------------
   const [file, setFile] = useState<File | null>(null);
   const [question, setQuestion] = useState("");
   const [messages, setMessages] = useState<Message[]>([
@@ -30,15 +28,9 @@ export default function AIAssistant({
   ]);
   const [status, setStatus] = useState<"idle" | "sending" | "error">("idle");
 
-  // ------------------------------
-  // Рефове за автоскрол
-  // ------------------------------
+  const router = useRouter(); // За навигация при затваряне
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const scrollRef = useRef<HTMLDivElement>(null);
 
-  // ------------------------------
-  // Скрол надолу при ново съобщение
-  // ------------------------------
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop =
@@ -46,21 +38,11 @@ export default function AIAssistant({
     }
   }, [messages]);
 
-  // ------------------------------
-  // Обработка на прикачен файл/снимка
-  // ------------------------------
-  const handleFileChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    fileType: "file" | "image",
-  ) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0] || null;
     setFile(selectedFile);
-    // Тук можеш да диференцираш по fileType, ако искаш различна логика
   };
 
-  // ------------------------------
-  // Изпращане на въпроса
-  // ------------------------------
   const handleAsk = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!question.trim()) return;
@@ -70,7 +52,6 @@ export default function AIAssistant({
     setQuestion("");
     setStatus("sending");
 
-    // Подготвяме данните за заявката
     const formData = new FormData();
     formData.append("question", userMessage.content);
     formData.append("lang", lang);
@@ -108,76 +89,96 @@ export default function AIAssistant({
     }
   };
 
-  // ------------------------------
-  // JSX – връщане на изглед
-  // ------------------------------
   return (
-    <div
-      className="fixed inset-0 flex flex-col overflow-x-hidden bg-white"
-      style={{
-        // Доп. защита срещу хоризонтален scroll
-        maxWidth: "100vw",
-      }}
-    >
-      {/* Заглавна лента */}
-      <div className="flex-shrink-0 border-b bg-white p-3 text-center shadow-sm">
-        <h1 className="text-lg font-semibold text-blue-700">
-          {lang === "bg" && "ERMA AI Чат"}
-          {lang === "en" && "ERMA AI Chat"}
-          {lang === "de" && "ERMA AI Chat"}
-        </h1>
-      </div>
-
-      {/* Чат зона (съобщения) */}
-      <div
-        ref={chatContainerRef}
-        className="w-full flex-1 overflow-y-auto break-words bg-gray-50 p-3"
-        style={{ WebkitOverflowScrolling: "touch" }}
-      >
-        {messages.map((msg, idx) => (
-          <div
-            key={idx}
-            className={`mb-3 flex w-full ${msg.role === "user" ? "justify-end" : "justify-start"} `}
+    <div className="flex min-h-screen items-center justify-center overflow-x-hidden bg-gradient-to-br from-blue-50 to-gray-100 py-8">
+      <div className="flex w-full max-w-2xl flex-col rounded-2xl border border-gray-200 bg-white shadow-xl">
+        {/* Заглавие с бутон X */}
+        <div className="flex items-center justify-between border-b px-6 py-4">
+          <h2 className="text-center text-xl font-semibold text-blue-900">
+            {lang === "bg" && "Питай ERMA AI за проекта си"}
+            {lang === "en" && "Ask ERMA AI about your project"}
+            {lang === "de" && "Frage ERMA AI zu deinem Projekt"}
+          </h2>
+          <button
+            onClick={() => router.push("/")} // Връща към началната страница
+            className="text-gray-500 transition-colors hover:text-gray-700"
+            aria-label={
+              lang === "bg"
+                ? "Затвори чата"
+                : lang === "de"
+                  ? "Chat schließen"
+                  : "Close chat"
+            }
           >
-            <div
-              className={`max-w-[80%] break-words rounded-xl px-4 py-2 shadow ${
-                msg.role === "user"
-                  ? "bg-blue-100 text-right text-blue-900"
-                  : "bg-white text-gray-800"
-              } `}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
             >
-              <p className="mb-1 text-xs font-bold">
-                {msg.role === "user"
-                  ? lang === "bg"
-                    ? "Вие:"
-                    : lang === "de"
-                      ? "Du:"
-                      : "You:"
-                  : "ERMA AI:"}
-              </p>
-              <p className="text-sm">{msg.content}</p>
-            </div>
-          </div>
-        ))}
-        <div ref={scrollRef} />
-      </div>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
 
-      {/* Форма за въвеждане (инпут, икони за прикачване, бутон) */}
-      <div className="flex-shrink-0 border-t bg-white p-3 shadow-inner">
-        <form onSubmit={handleAsk} className="flex items-center space-x-2">
-          {/* Иконка: Прикачване на документ (PDF, DOCX и т.н.) */}
+        {/* Чат съобщения */}
+        <div
+          ref={chatContainerRef}
+          className="flex-1 space-y-4 overflow-y-auto bg-gray-50 px-4 py-6"
+          style={{
+            minHeight: 400,
+            maxHeight: 500,
+          }}
+        >
+          {messages.map((msg, idx) => (
+            <div
+              key={idx}
+              className={`flex ${
+                msg.role === "user" ? "justify-end" : "justify-start"
+              }`}
+            >
+              <div
+                className={`max-w-[80%] break-words rounded-xl px-4 py-2 text-base shadow-sm ${
+                  msg.role === "user"
+                    ? "rounded-br-none bg-blue-500 text-white"
+                    : "rounded-bl-none bg-gray-200 text-gray-900"
+                } `}
+              >
+                {msg.content}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Форма за изпращане на съобщение с радиус */}
+        <form
+          onSubmit={handleAsk}
+          className="flex items-center gap-2 rounded-b-2xl border-t bg-white px-4 py-3"
+        >
+          <input
+            type="file"
+            accept=".pdf,.docx,.jpg,.jpeg,.png"
+            onChange={handleFileChange}
+            className="hidden"
+            id="attachFile"
+          />
           <label
             htmlFor="attachFile"
             className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-gray-200 text-gray-600 hover:bg-gray-300"
             title={
               lang === "bg"
-                ? "Прикачи документ"
+                ? "Прикачи файл"
                 : lang === "de"
-                  ? "Dokument anhängen"
+                  ? "Datei anhängen"
                   : "Attach file"
             }
           >
-            {/* Paperclip Icon */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
@@ -193,113 +194,37 @@ export default function AIAssistant({
               />
             </svg>
           </label>
-          <input
-            id="attachFile"
-            type="file"
-            accept=".pdf,.docx"
-            className="hidden"
-            onChange={(e) => handleFileChange(e, "file")}
-          />
 
-          {/* Иконка: Прикачване на изображение (JPG, PNG) */}
-          <label
-            htmlFor="attachImage"
-            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-gray-200 text-gray-600 hover:bg-gray-300"
-            title={
-              lang === "bg"
-                ? "Прикачи снимка"
-                : lang === "de"
-                  ? "Bild anhängen"
-                  : "Attach image"
-            }
-          >
-            {/* Image Icon */}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-2 8v4a2 2 0 01-2 2H7a2 2 0 01-2-2v-4"
-              />
-            </svg>
-          </label>
-          <input
-            id="attachImage"
-            type="file"
-            accept=".jpg,.jpeg,.png"
-            className="hidden"
-            onChange={(e) => handleFileChange(e, "image")}
-          />
-
-          {/* Текстово поле */}
           <textarea
+            placeholder={
+              lang === "bg"
+                ? "Задай въпрос или опиши проекта си..."
+                : lang === "de"
+                  ? "Stelle eine Frage oder beschreibe dein Projekt..."
+                  : "Ask a question or describe your project..."
+            }
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             rows={1}
-            placeholder={
-              lang === "bg"
-                ? "Напиши съобщение..."
-                : lang === "de"
-                  ? "Nachricht schreiben..."
-                  : "Type a message..."
-            }
-            className="flex-1 resize-none rounded-lg border border-gray-300 p-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-400"
+            className="flex-1 resize-none rounded-full border border-gray-300 px-4 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-300"
+            disabled={status === "sending"}
           />
-
-          {/* Бутон за изпращане */}
           <button
             type="submit"
-            disabled={status === "sending"}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-500 text-white hover:bg-blue-600 disabled:opacity-50"
-            title={
-              lang === "bg" ? "Изпрати" : lang === "de" ? "Senden" : "Send"
-            }
+            disabled={status === "sending" || !question.trim()}
+            className="rounded bg-blue-500 px-5 py-2 font-semibold text-white shadow transition-colors hover:bg-blue-600 disabled:opacity-50"
           >
-            {status === "sending" ? (
-              // По желание може да има loader/spinner
-              <svg
-                className="h-5 w-5 animate-spin"
-                fill="none"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8v8H4z"
-                ></path>
-              </svg>
-            ) : (
-              // Paper plane Icon
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 rotate-45"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3 10l11-6 7 18-11-6-4 5z"
-                />
-              </svg>
-            )}
+            {status === "sending"
+              ? lang === "bg"
+                ? "Мисли..."
+                : lang === "de"
+                  ? "Denkt nach..."
+                  : "Thinking..."
+              : lang === "bg"
+                ? "Изпрати"
+                : lang === "de"
+                  ? "Senden"
+                  : "Send"}
           </button>
         </form>
       </div>
