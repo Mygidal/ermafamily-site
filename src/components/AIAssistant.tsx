@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation"; // Добавяме за навигация при затваряне
+import { useRouter } from "next/navigation";
 
 type Message = {
   role: "user" | "assistant";
@@ -28,7 +28,7 @@ export default function AIAssistant({
   ]);
   const [status, setStatus] = useState<"idle" | "sending" | "error">("idle");
 
-  const router = useRouter(); // За навигация при затваряне
+  const router = useRouter();
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -90,17 +90,17 @@ export default function AIAssistant({
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center overflow-x-hidden bg-gradient-to-br from-blue-50 to-gray-100 py-8">
-      <div className="flex w-full max-w-2xl flex-col rounded-2xl border border-gray-200 bg-white shadow-xl">
+    <div className="fixed inset-0 flex flex-col overflow-x-hidden bg-gradient-to-br from-blue-50 to-gray-100">
+      <div className="flex h-full w-full max-w-[100vw] flex-col rounded-none border border-gray-200 bg-white shadow-xl">
         {/* Заглавие с бутон X */}
-        <div className="flex items-center justify-between border-b px-6 py-4">
-          <h2 className="text-center text-xl font-semibold text-blue-900">
+        <div className="flex items-center justify-between border-b px-4 py-3">
+          <h2 className="text-center text-lg font-semibold text-blue-900">
             {lang === "bg" && "Питай ERMA AI за проекта си"}
             {lang === "en" && "Ask ERMA AI about your project"}
             {lang === "de" && "Frage ERMA AI zu deinem Projekt"}
           </h2>
           <button
-            onClick={() => router.push("/")} // Връща към началната страница
+            onClick={() => router.push("/")}
             className="text-gray-500 transition-colors hover:text-gray-700"
             aria-label={
               lang === "bg"
@@ -130,11 +130,8 @@ export default function AIAssistant({
         {/* Чат съобщения */}
         <div
           ref={chatContainerRef}
-          className="flex-1 space-y-4 overflow-y-auto bg-gray-50 px-4 py-6"
-          style={{
-            minHeight: 400,
-            maxHeight: 500,
-          }}
+          className="flex-1 space-y-4 overflow-y-auto bg-gray-50 px-4 py-4"
+          style={{ WebkitOverflowScrolling: "touch" }}
         >
           {messages.map((msg, idx) => (
             <div
@@ -156,7 +153,7 @@ export default function AIAssistant({
           ))}
         </div>
 
-        {/* Форма за изпращане на съобщение с радиус */}
+        {/* Форма за изпращане на съобщение */}
         <form
           onSubmit={handleAsk}
           className="flex items-center gap-2 rounded-b-2xl border-t bg-white px-4 py-3"
@@ -206,8 +203,7 @@ export default function AIAssistant({
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             rows={1}
-            className="flex-1 resize-none rounded-full border border-gray-300 px-4 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-300"
-            disabled={status === "sending"}
+            className="flex-1 resize-none rounded-full border border-gray-300 px-4 py-1 text-base focus:outline-none focus:ring-2 focus:ring-blue-300"
           />
           <button
             type="submit"
