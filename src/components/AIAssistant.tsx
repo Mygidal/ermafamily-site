@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 type Message = {
   role: "user" | "assistant";
   content: string;
-  file?: { name: string; url: string }; // Добавяме поле за файл
+  file?: { name: string; url: string };
 };
 
 export default function AIAssistant({
@@ -63,59 +63,105 @@ export default function AIAssistant({
     };
 
     if (file) {
-      userMessage.file = {
-        name: file.name,
-        url: URL.createObjectURL(file),
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const fileURL = typeof reader.result === "string" ? reader.result : "";
+        userMessage.file = {
+          name: file.name,
+          url: fileURL,
+        };
+
+        setMessages((prev) => [...prev, userMessage]);
+        setQuestion("");
+        setFile(null);
+        setStatus("sending");
+
+        const formData = new FormData();
+        formData.append("question", question || "Потребителят качи файл.");
+        formData.append("lang", lang);
+        formData.append("attachment", file);
+
+        try {
+          const res = await fetch("/api/contact", {
+            method: "POST",
+            body: formData,
+          });
+
+          const data = await res.json();
+          if (res.ok) {
+            setMessages((prev) => [
+              ...prev,
+              {
+                role: "assistant",
+                content: data.answer || "🤖 Няма отговор от ERMA AI.",
+                file: data.file,
+              },
+            ]);
+            setStatus("idle");
+          } else {
+            throw new Error(data.error || "Грешка при отговора.");
+          }
+        } catch (err) {
+          console.error("❌ Chat error:", err);
+          setMessages((prev) => [
+            ...prev,
+            {
+              role: "assistant",
+              content: "⚠️ Възникна грешка при свързване с ERMA AI.",
+            },
+          ]);
+          setStatus("error");
+        }
       };
-    }
 
-    setMessages((prev) => [...prev, userMessage]);
-    setQuestion("");
-    setFile(null);
-    setStatus("sending");
+      reader.readAsDataURL(file);
+    } else {
+      setMessages((prev) => [...prev, userMessage]);
+      setQuestion("");
+      setFile(null);
+      setStatus("sending");
 
-    const formData = new FormData();
-    formData.append("question", question || "Потребителят качи файл.");
-    formData.append("lang", lang);
-    if (file) formData.append("attachment", file);
+      const formData = new FormData();
+      formData.append("question", question);
+      formData.append("lang", lang);
 
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        body: formData,
-      });
+      try {
+        const res = await fetch("/api/contact", {
+          method: "POST",
+          body: formData,
+        });
 
-      const data = await res.json();
-      if (res.ok) {
+        const data = await res.json();
+        if (res.ok) {
+          setMessages((prev) => [
+            ...prev,
+            {
+              role: "assistant",
+              content: data.answer || "🤖 Няма отговор от ERMA AI.",
+              file: data.file,
+            },
+          ]);
+          setStatus("idle");
+        } else {
+          throw new Error(data.error || "Грешка при отговора.");
+        }
+      } catch (err) {
+        console.error("❌ Chat error:", err);
         setMessages((prev) => [
           ...prev,
           {
             role: "assistant",
-            content: data.answer || "🤖 Няма отговор от ERMA AI.",
-            file: data.file, // Добавяме информация за файла, ако API върне такава
+            content: "⚠️ Възникна грешка при свързване с ERMA AI.",
           },
         ]);
-        setStatus("idle");
-      } else {
-        throw new Error(data.error || "Грешка при отговора.");
+        setStatus("error");
       }
-    } catch (err) {
-      console.error("❌ Chat error:", err);
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: "⚠️ Възникна грешка при свързване с ERMA AI.",
-        },
-      ]);
-      setStatus("error");
     }
   };
 
   return (
     <div className="fixed inset-0 flex flex-col overflow-x-hidden bg-gradient-to-br from-blue-50 to-gray-100">
       <div className="flex h-full w-full max-w-[100vw] flex-col rounded-none border border-gray-200 bg-white shadow-xl">
-        {/* Заглавие с бутон X */}
         <div className="flex items-center border-b px-4 py-3">
           <div className="flex-1 text-center">
             <h2 className="text-lg font-semibold text-blue-900">
@@ -124,7 +170,6 @@ export default function AIAssistant({
               {lang === "de" && "Beratung mit ERMA AI"}
             </h2>
           </div>
-
           <button
             onClick={() => router.push("/")}
             className="ml-auto text-gray-500 transition-colors hover:text-gray-700"
@@ -153,7 +198,6 @@ export default function AIAssistant({
           </button>
         </div>
 
-        {/* Чат съобщения */}
         <div
           ref={chatContainerRef}
           className="flex-1 space-y-4 overflow-y-auto bg-gray-50 px-4 py-4"
@@ -162,16 +206,14 @@ export default function AIAssistant({
           {messages.map((msg, idx) => (
             <div
               key={idx}
-              className={`flex ${
-                msg.role === "user" ? "justify-end" : "justify-start"
-              }`}
+              className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
             >
               <div
                 className={`max-w-[80%] break-words rounded-xl px-4 py-2 text-base shadow-sm ${
                   msg.role === "user"
                     ? "rounded-br-none bg-blue-500 text-white"
                     : "rounded-bl-none bg-gray-200 text-gray-900"
-                } `}
+                }`}
               >
                 {msg.content}
                 {msg.file && (
@@ -199,7 +241,6 @@ export default function AIAssistant({
           ))}
         </div>
 
-        {/* Форма за изпращане на съобщение */}
         <form
           onSubmit={handleAsk}
           className="flex items-center gap-2 rounded-b-2xl border-t bg-white px-4 py-3"
@@ -237,7 +278,6 @@ export default function AIAssistant({
               />
             </svg>
           </label>
-
           <textarea
             ref={textareaRef}
             placeholder={
@@ -267,7 +307,6 @@ export default function AIAssistant({
                 className="h-5 w-5 animate-spin"
                 fill="none"
                 viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
               >
                 <circle
                   className="opacity-25"
@@ -276,12 +315,12 @@ export default function AIAssistant({
                   r="10"
                   stroke="currentColor"
                   strokeWidth="4"
-                ></circle>
+                />
                 <path
                   className="opacity-75"
                   fill="currentColor"
                   d="M4 12a8 8 0 018-8v8H4z"
-                ></path>
+                />
               </svg>
             ) : (
               <svg
