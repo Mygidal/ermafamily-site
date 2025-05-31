@@ -7,6 +7,7 @@ type Message = {
   role: "user" | "assistant";
   content: string;
   file?: { name: string; url: string };
+  preview?: boolean; // за да знаем, че е само preview
 };
 
 export default function AIAssistant({
@@ -15,6 +16,10 @@ export default function AIAssistant({
   lang?: "bg" | "en" | "de";
 }) {
   const [file, setFile] = useState<File | null>(null);
+  const [filePreview, setFilePreview] = useState<{
+    name: string;
+    url: string;
+  } | null>(null);
   const [question, setQuestion] = useState("");
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -33,6 +38,7 @@ export default function AIAssistant({
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  // Скрол до последното съобщение
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop =
@@ -40,6 +46,7 @@ export default function AIAssistant({
     }
   }, [messages]);
 
+  // Оразмеряване на textarea
   useEffect(() => {
     const textarea = textareaRef.current;
     if (textarea) {
@@ -48,120 +55,98 @@ export default function AIAssistant({
     }
   }, [question]);
 
+  // Когато избереш файл, показваш го като preview в чата
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0] || null;
     setFile(selectedFile);
+
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setFilePreview({
+          name: selectedFile.name,
+          url: typeof reader.result === "string" ? reader.result : "",
+        });
+        // Добави preview съобщение
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "user",
+            content: question || "",
+            file: {
+              name: selectedFile.name,
+              url: typeof reader.result === "string" ? reader.result : "",
+            },
+            preview: true,
+          },
+        ]);
+      };
+      reader.readAsDataURL(selectedFile);
+    }
   };
 
+  // Когато изпратиш, махаш preview-то и пращаш реално към бекенда
   const handleAsk = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!question.trim() && !file) return;
 
+    // Махни preview-то от чата
+    setMessages((prev) => prev.filter((msg) => !msg.preview));
+
+    // Създай реалното user съобщение
     const userMessage: Message = {
       role: "user",
       content: question,
+      file: filePreview ? { ...filePreview } : undefined,
     };
+    setMessages((prev) => [...prev, userMessage]);
+    setQuestion("");
+    setFile(null);
+    setFilePreview(null);
+    setStatus("sending");
 
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = async () => {
-        const fileURL = typeof reader.result === "string" ? reader.result : "";
-        userMessage.file = {
-          name: file.name,
-          url: fileURL,
-        };
+    // Изпрати към бекенда
+    const formData = new FormData();
+    formData.append("question", question || "Потребителят качи файл.");
+    formData.append("lang", lang);
+    if (file) formData.append("attachment", file);
 
-        setMessages((prev) => [...prev, userMessage]);
-        setQuestion("");
-        setFile(null);
-        setStatus("sending");
-
-        const formData = new FormData();
-        formData.append("question", question || "Потребителят качи файл.");
-        formData.append("lang", lang);
-        formData.append("attachment", file);
-
-        try {
-          const res = await fetch("/api/contact", {
-            method: "POST",
-            body: formData,
-          });
-
-          const data = await res.json();
-          if (res.ok) {
-            setMessages((prev) => [
-              ...prev,
-              {
-                role: "assistant",
-                content: data.answer || "🤖 Няма отговор от ERMA AI.",
-                file: data.file,
-              },
-            ]);
-            setStatus("idle");
-          } else {
-            throw new Error(data.error || "Грешка при отговора.");
-          }
-        } catch (err) {
-          console.error("❌ Chat error:", err);
-          setMessages((prev) => [
-            ...prev,
-            {
-              role: "assistant",
-              content: "⚠️ Възникна грешка при свързване с ERMA AI.",
-            },
-          ]);
-          setStatus("error");
-        }
-      };
-
-      reader.readAsDataURL(file);
-    } else {
-      setMessages((prev) => [...prev, userMessage]);
-      setQuestion("");
-      setFile(null);
-      setStatus("sending");
-
-      const formData = new FormData();
-      formData.append("question", question);
-      formData.append("lang", lang);
-
-      try {
-        const res = await fetch("/api/contact", {
-          method: "POST",
-          body: formData,
-        });
-
-        const data = await res.json();
-        if (res.ok) {
-          setMessages((prev) => [
-            ...prev,
-            {
-              role: "assistant",
-              content: data.answer || "🤖 Няма отговор от ERMA AI.",
-              file: data.file,
-            },
-          ]);
-          setStatus("idle");
-        } else {
-          throw new Error(data.error || "Грешка при отговора.");
-        }
-      } catch (err) {
-        console.error("❌ Chat error:", err);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (res.ok) {
         setMessages((prev) => [
           ...prev,
           {
             role: "assistant",
-            content: "⚠️ Възникна грешка при свързване с ERMA AI.",
+            content: data.answer || "🤖 Няма отговор от ERMA AI.",
+            file: data.file || undefined,
           },
         ]);
-        setStatus("error");
+        setStatus("idle");
+      } else {
+        throw new Error(data.error || "Грешка при отговора.");
       }
+    } catch (err) {
+      console.error("❌ Chat error:", err);
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: "⚠️ Възникна грешка при свързване с ERMA AI.",
+        },
+      ]);
+      setStatus("error");
     }
   };
 
   return (
     <div className="fixed inset-0 flex flex-col overflow-x-hidden bg-gradient-to-br from-blue-50 to-gray-100">
       <div className="flex h-full w-full max-w-[100vw] flex-col rounded-none border border-gray-200 bg-white shadow-xl">
+        {/* ... header ... */}
         <div className="flex items-center border-b px-4 py-3">
           <div className="flex-1 text-center">
             <h2 className="text-lg font-semibold text-blue-900">
@@ -198,6 +183,7 @@ export default function AIAssistant({
           </button>
         </div>
 
+        {/* Чат съобщения */}
         <div
           ref={chatContainerRef}
           className="flex-1 space-y-4 overflow-y-auto bg-gray-50 px-4 py-4"
@@ -236,11 +222,17 @@ export default function AIAssistant({
                     )}
                   </div>
                 )}
+                {msg.preview && (
+                  <span className="mt-1 block text-xs text-yellow-400">
+                    (Преглед, не е изпратен)
+                  </span>
+                )}
               </div>
             </div>
           ))}
         </div>
 
+        {/* Форма */}
         <form
           onSubmit={handleAsk}
           className="flex items-center gap-2 rounded-b-2xl border-t bg-white px-4 py-3"

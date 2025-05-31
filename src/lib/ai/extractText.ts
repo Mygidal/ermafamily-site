@@ -1,3 +1,5 @@
+// src/lib/ai/extractText.ts
+
 import fs from "fs";
 import path from "path";
 import pdfParse from "pdf-parse";
