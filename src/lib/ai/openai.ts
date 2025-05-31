@@ -1,8 +1,16 @@
 import { OpenAI } from "openai";
 import type { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 
+const apiKey = process.env.OPENAI_API_KEY;
+
+if (!apiKey) {
+  const error = "Не е зададен OPENAI_API_KEY в средата.";
+  console.error(error);
+  throw new Error(error);
+}
+
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey,
 });
 
 export async function askGPTFromText(

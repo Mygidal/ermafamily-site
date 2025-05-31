@@ -202,26 +202,27 @@ export default function AIAssistant({
                 }`}
               >
                 {msg.content}
-                {msg.file && (
-                  <div className="mt-2">
-                    {msg.file.name.match(/\.(jpg|jpeg|png)$/i) ? (
-                      <img
-                        src={msg.file.url}
-                        alt={msg.file.name}
-                        className="mt-2 max-w-full rounded-lg"
-                        style={{ maxHeight: "200px" }}
-                      />
-                    ) : (
-                      <a
-                        href={msg.file.url}
-                        download={msg.file.name}
-                        className="text-sm text-blue-300 underline hover:text-blue-400"
-                      >
-                        {msg.file.name}
-                      </a>
-                    )}
-                  </div>
-                )}
+                {msg.file &&
+                  (msg.preview || msg.file.url.startsWith("/tmp/")) && (
+                    <div className="mt-2">
+                      {msg.file.name.match(/\.(jpg|jpeg|png)$/i) ? (
+                        <img
+                          src={msg.file.url}
+                          alt={msg.file.name}
+                          className="mt-2 max-w-full rounded-lg"
+                          style={{ maxHeight: "200px" }}
+                        />
+                      ) : (
+                        <a
+                          href={msg.file.url}
+                          download={msg.file.name}
+                          className="text-sm text-blue-300 underline hover:text-blue-400"
+                        >
+                          {msg.file.name}
+                        </a>
+                      )}
+                    </div>
+                  )}
                 {msg.preview && (
                   <span className="mt-1 block text-xs text-yellow-400">
                     (Преглед, не е изпратен)

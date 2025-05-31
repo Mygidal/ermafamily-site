@@ -32,8 +32,8 @@ export async function POST(req: NextRequest) {
     fileName = "name" in file ? file.name : "uploaded-file";
   }
 
-  // Създаваме tmp/, ако липсва
-  const tmpDir = path.join(process.cwd(), "tmp");
+  // Създаваме public/tmp/, ако липсва
+  const tmpDir = path.join(process.cwd(), "public", "tmp");
   if (!fs.existsSync(tmpDir)) {
     await mkdir(tmpDir);
   }
