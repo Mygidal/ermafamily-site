@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 type Message = {
   role: "user" | "assistant";
   content: string;
+  file?: { name: string; url: string }; // Добавяме поле за файл
 };
 
 export default function AIAssistant({
@@ -32,7 +33,6 @@ export default function AIAssistant({
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Автоскрол надолу при всяко ново съобщение
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop =
@@ -40,12 +40,11 @@ export default function AIAssistant({
     }
   }, [messages]);
 
-  // Динамично регулиране на височината на textarea
   useEffect(() => {
     const textarea = textareaRef.current;
     if (textarea) {
-      textarea.style.height = "auto"; // Нулираме височината
-      textarea.style.height = `${Math.min(textarea.scrollHeight, 120)}px`; // Ограничаваме до 120px
+      textarea.style.height = "auto";
+      textarea.style.height = `${Math.min(textarea.scrollHeight, 120)}px`;
     }
   }, [question]);
 
@@ -56,15 +55,27 @@ export default function AIAssistant({
 
   const handleAsk = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!question.trim()) return;
+    if (!question.trim() && !file) return;
 
-    const userMessage: Message = { role: "user", content: question };
+    const userMessage: Message = {
+      role: "user",
+      content: question,
+    };
+
+    if (file) {
+      userMessage.file = {
+        name: file.name,
+        url: URL.createObjectURL(file),
+      };
+    }
+
     setMessages((prev) => [...prev, userMessage]);
     setQuestion("");
+    setFile(null);
     setStatus("sending");
 
     const formData = new FormData();
-    formData.append("question", userMessage.content);
+    formData.append("question", question || "Потребителят качи файл.");
     formData.append("lang", lang);
     if (file) formData.append("attachment", file);
 
@@ -81,11 +92,12 @@ export default function AIAssistant({
           {
             role: "assistant",
             content: data.answer || "🤖 Няма отговор от ERMA AI.",
+            file: data.file, // Добавяме информация за файла, ако API върне такава
           },
         ]);
         setStatus("idle");
       } else {
-        throw new Error("Грешка при отговора.");
+        throw new Error(data.error || "Грешка при отговора.");
       }
     } catch (err) {
       console.error("❌ Chat error:", err);
@@ -104,15 +116,18 @@ export default function AIAssistant({
     <div className="fixed inset-0 flex flex-col overflow-x-hidden bg-gradient-to-br from-blue-50 to-gray-100">
       <div className="flex h-full w-full max-w-[100vw] flex-col rounded-none border border-gray-200 bg-white shadow-xl">
         {/* Заглавие с бутон X */}
-        <div className="flex items-center justify-between border-b px-4 py-3">
-          <h2 className="text-center text-lg font-semibold text-blue-900">
-            {lang === "bg" && "Питай ERMA AI за проекта си"}
-            {lang === "en" && "Ask ERMA AI about your project"}
-            {lang === "de" && "Frage ERMA AI zu deinem Projekt"}
-          </h2>
+        <div className="flex items-center border-b px-4 py-3">
+          <div className="flex-1 text-center">
+            <h2 className="text-lg font-semibold text-blue-900">
+              {lang === "bg" && "Консултация с ERMA AI"}
+              {lang === "en" && "Consult with ERMA AI"}
+              {lang === "de" && "Beratung mit ERMA AI"}
+            </h2>
+          </div>
+
           <button
             onClick={() => router.push("/")}
-            className="text-gray-500 transition-colors hover:text-gray-700"
+            className="ml-auto text-gray-500 transition-colors hover:text-gray-700"
             aria-label={
               lang === "bg"
                 ? "Затвори чата"
@@ -159,6 +174,26 @@ export default function AIAssistant({
                 } `}
               >
                 {msg.content}
+                {msg.file && (
+                  <div className="mt-2">
+                    {msg.file.name.match(/\.(jpg|jpeg|png)$/i) ? (
+                      <img
+                        src={msg.file.url}
+                        alt={msg.file.name}
+                        className="mt-2 max-w-full rounded-lg"
+                        style={{ maxHeight: "200px" }}
+                      />
+                    ) : (
+                      <a
+                        href={msg.file.url}
+                        download={msg.file.name}
+                        className="text-sm text-blue-300 underline hover:text-blue-400"
+                      >
+                        {msg.file.name}
+                      </a>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           ))}
@@ -224,7 +259,7 @@ export default function AIAssistant({
           />
           <button
             type="submit"
-            disabled={status === "sending" || !question.trim()}
+            disabled={status === "sending" || (!question.trim() && !file)}
             className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-500 text-white shadow transition-colors hover:bg-blue-600 disabled:opacity-50"
           >
             {status === "sending" ? (
@@ -251,7 +286,7 @@ export default function AIAssistant({
             ) : (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 rotate-45"
+                className="h-5 w-5"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -260,7 +295,7 @@ export default function AIAssistant({
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  d="M3 10l11-6 7 18-11-6-4 5z"
+                  d="M5 13l4 4L19 7"
                 />
               </svg>
             )}

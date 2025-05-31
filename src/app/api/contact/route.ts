@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { askGPTFromText } from "../../../lib/ai/openai";
+import { askGeminiFromText } from "../../../lib/ai/gemini"; // 👈 нова функция
 
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
     const question = formData.get("question")?.toString() || "";
+    const lang = formData.get("lang")?.toString() || "bg"; // 👈 по избор
 
     if (!question) {
       return NextResponse.json(
@@ -13,17 +14,26 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const gptAnswer = await askGPTFromText(
-      question,
-      "Контекст липсва. Отговори само по въпроса.",
-    );
-    console.log("🤖 GPT отговор:", gptAnswer);
+    // Езикови инструкции
+    const languageInstructions = {
+      bg: "Отговаряй на български, кратко и професионално.",
+      en: "Respond in English, briefly and professionally.",
+      de: "Antwort auf Deutsch, kurz und professionell.",
+    };
 
-    return NextResponse.json({ success: true, answer: gptAnswer });
+    const context =
+      languageInstructions[lang as keyof typeof languageInstructions] ||
+      languageInstructions.bg;
+
+    const geminiAnswer = await askGeminiFromText(question, context);
+
+    console.log("🤖 Gemini отговор:", geminiAnswer);
+
+    return NextResponse.json({ success: true, answer: geminiAnswer });
   } catch (err: any) {
-    console.error("❌ GPT контактна грешка:", err);
+    console.error("❌ Gemini грешка:", err);
     return NextResponse.json(
-      { success: false, error: err.message || "Unknown error" },
+      { success: false, error: err.message || "Неизвестна грешка" },
       { status: 500 },
     );
   }

@@ -13,10 +13,12 @@ export default function PriceCalculator() {
     message: "",
   });
   const [file, setFile] = useState<File | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); // Добавяме за по-детайлна грешка
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setStatus("sending");
+    setErrorMessage(null); // Нулираме грешката преди нова заявка
 
     const data = new FormData();
     data.append("name", formData.name);
@@ -25,17 +27,30 @@ export default function PriceCalculator() {
     data.append("message", formData.message);
     if (file) data.append("attachment", file);
 
-    const res = await fetch("/api/contact", {
-      method: "POST",
-      body: data,
-    });
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        body: data,
+      });
 
-    if (res.ok) {
-      setStatus("success");
-      setFormData({ name: "", email: "", phone: "", message: "" });
-      setFile(null);
-    } else {
+      const responseData = await res.json(); // Взимаме отговора за повече информация
+
+      if (res.ok) {
+        setStatus("success");
+        setFormData({ name: "", email: "", phone: "", message: "" });
+        setFile(null);
+      } else {
+        setStatus("error");
+        setErrorMessage(
+          responseData.message || "Неизвестна грешка при изпращане.",
+        );
+      }
+    } catch (err) {
+      console.error("❌ Form submission error:", err);
       setStatus("error");
+      setErrorMessage(
+        "Проблем с връзката към сървъра. Опитайте отново по-късно.",
+      );
     }
   }
 
@@ -141,7 +156,7 @@ export default function PriceCalculator() {
             )}
             {status === "error" && (
               <p className="mt-2 text-sm text-red-600">
-                ⚠️ Грешка при изпращане. Опитайте отново.
+                ⚠️ Грешка при изпращане: {errorMessage || "Опитайте отново."}
               </p>
             )}
           </form>

@@ -1,12 +1,6 @@
-"use client";
-
-import { usePathname } from "next/navigation";
 import "../globals.css";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import AIAssistantFloating from "../components/AIAssistantFloating";
-import { ChatProvider } from "../context/ChatContext";
 import { Inter, Montserrat } from "next/font/google";
+import ClientOnlyLayout from "../components/ClientOnlyLayout";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,9 +19,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
-  const isChatPage = pathname.startsWith("/ai");
-
   return (
     <html lang="bg">
       <head>
@@ -39,16 +30,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${montserrat.variable} flex min-h-screen max-w-[100vw] flex-col overflow-x-hidden bg-hero-pattern bg-cover bg-center bg-no-repeat font-sans text-blue-900`}
       >
-        <ChatProvider>
-          {!isChatPage && <Header />}
-          <main className="w-full max-w-[100vw] grow overflow-x-hidden">
-            {children}
-          </main>
-          <div className="max-w-[100vw] overflow-x-hidden lg:hidden">
-            <AIAssistantFloating />
-          </div>
-          {!isChatPage && <Footer />}
-        </ChatProvider>
+        <ClientOnlyLayout>{children}</ClientOnlyLayout>
       </body>
     </html>
   );
