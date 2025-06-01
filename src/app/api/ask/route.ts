@@ -4,7 +4,7 @@ import fs from "fs";
 import path from "path";
 
 export async function POST(req: NextRequest) {
-  const { question } = await req.json();
+  const { question, filename } = await req.json();
 
   const tmpDir = path.join(process.cwd(), "public", "tmp");
 
@@ -13,43 +13,50 @@ export async function POST(req: NextRequest) {
     fs.mkdirSync(tmpDir, { recursive: true });
   }
 
-  const files = fs.readdirSync(tmpDir);
+  let targetFile = "";
 
-  // Филтриране само на файлове с позволени разширения
-  const candidateFiles = files.filter((f) =>
-    [".pdf", ".docx", ".jpg", ".jpeg", ".png"].some((ext) =>
-      f.toLowerCase().endsWith(ext),
-    ),
-  );
+  if (filename) {
+    const requestedFile = path.join(tmpDir, filename);
+    if (fs.existsSync(requestedFile)) {
+      targetFile = filename;
+    } else {
+      return NextResponse.json({
+        answer: "❌ Файлът не е намерен в системата.",
+      });
+    }
+  } else {
+    const files = fs.readdirSync(tmpDir);
+    const candidateFiles = files.filter((f) =>
+      [".pdf", ".docx", ".jpg", ".jpeg", ".png"].some((ext) =>
+        f.toLowerCase().endsWith(ext),
+      ),
+    );
 
-  // Избор на най-новия файл
-  const sortedFiles = candidateFiles
-    .map((name) => ({
-      name,
-      mtime: fs.statSync(path.join(tmpDir, name)).mtime,
-    }))
-    .sort((a, b) => b.mtime.getTime() - a.mtime.getTime());
+    const sortedFiles = candidateFiles
+      .map((name) => ({
+        name,
+        mtime: fs.statSync(path.join(tmpDir, name)).mtime,
+      }))
+      .sort((a, b) => b.mtime.getTime() - a.mtime.getTime());
 
-  const latestFile = sortedFiles.length > 0 ? sortedFiles[0].name : null;
+    if (sortedFiles.length === 0) {
+      return NextResponse.json({
+        answer: "❌ Няма наличен файл за анализ.",
+      });
+    }
 
-  if (!latestFile) {
-    return NextResponse.json({
-      answer: "❌ Няма наличен файл за анализ.",
-    });
+    targetFile = sortedFiles[0].name;
   }
 
-  const filePath = path.join(tmpDir, latestFile);
+  const filePath = path.join(tmpDir, targetFile);
   const { extractText } = await import("../../../lib/ai/extractText");
   const context = await extractText(filePath);
 
   const gptResponse = await askGPTFromText(question, context);
 
-  // Генерирай достъпен линк за клиента
-  const fileUrl = `/tmp/${latestFile}`;
-
   return NextResponse.json({
     answer: gptResponse,
-    fileUrl: fileUrl,
-    filename: latestFile,
+    fileUrl: `/tmp/${targetFile}`,
+    filename: targetFile,
   });
 }
