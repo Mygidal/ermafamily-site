@@ -50,18 +50,23 @@ const languages = [
 interface Message {
   role: "user" | "assistant";
   content: string;
+  files?: { name: string; url: string }[];
+  preview?: boolean;
 }
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
-  const [chatOpen, setChatOpen] = useState(false); // За десктоп чат
+  const [chatOpen, setChatOpen] = useState(false);
   const [message, setMessage] = useState("");
-  const [file, setFile] = useState<File | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
+  const [filePreviews, setFilePreviews] = useState<
+    { name: string; url: string }[]
+  >([]);
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Здравей! Аз съм ERMA Al. С какво мога да помогна?",
+      content: "Здравей! Аз съм ERMA AI. С какво мога да помогна?",
     },
   ]);
   const [status, setStatus] = useState<"idle" | "sending" | "error">("idle");
@@ -69,6 +74,7 @@ export default function Header() {
   const langRef = useRef<HTMLDivElement>(null);
   const chatRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const pathname = usePathname();
 
   const currentLang = pathname.startsWith("/en")
@@ -102,24 +108,69 @@ export default function Header() {
     }
   }, [messages]);
 
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = "auto";
+      textarea.style.height = `${Math.min(textarea.scrollHeight, 120)}px`;
+    }
+  }, [message]);
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selected = e.target.files?.[0] || null;
-    setFile(selected);
+    const selectedFiles = e.target.files;
+    if (!selectedFiles) return;
+
+    const fileArray = Array.from(selectedFiles);
+    setFiles(fileArray);
+
+    const previews = fileArray.map((file) => {
+      return new Promise<{ name: string; url: string }>((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          resolve({
+            name: file.name,
+            url: typeof reader.result === "string" ? reader.result : "",
+          });
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+
+    Promise.all(previews).then((filePreviews) => {
+      setFilePreviews(filePreviews);
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "user",
+          content: message || "",
+          files: filePreviews,
+          preview: true,
+        },
+      ]);
+    });
   };
 
   const handleMessageSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!message.trim()) return;
+    if (!message.trim() && files.length === 0) return;
 
-    const userMessage: Message = { role: "user", content: message };
+    setMessages((prev) => prev.filter((msg) => !msg.preview));
+
+    const userMessage: Message = {
+      role: "user",
+      content: message,
+      files: filePreviews,
+    };
     setMessages((prev) => [...prev, userMessage]);
     setMessage("");
+    setFiles([]);
+    setFilePreviews([]);
     setStatus("sending");
 
     const formData = new FormData();
     formData.append("question", userMessage.content);
     formData.append("lang", currentLang);
-    if (file) formData.append("attachment", file);
+    files.forEach((file, idx) => formData.append(`attachment_${idx}`, file));
 
     try {
       const res = await fetch("/api/contact", {
@@ -133,11 +184,11 @@ export default function Header() {
           ...prev,
           {
             role: "assistant",
-            content: data.answer || "🤖 Няма отговор от ERMA Al.",
+            content: data.answer || "🤖 Няма отговор от ERMA AI.",
+            files: data.files || [],
           },
         ]);
         setStatus("idle");
-        setFile(null);
       } else {
         throw new Error("Грешка при отговора.");
       }
@@ -147,7 +198,7 @@ export default function Header() {
         ...prev,
         {
           role: "assistant",
-          content: "⚠️ Възникна грешка при свързване с ERMA Al.",
+          content: "⚠️ Възникна грешка при свързване с ERMA AI.",
         },
       ]);
       setStatus("error");
@@ -156,7 +207,6 @@ export default function Header() {
 
   return (
     <header className="fixed left-0 top-0 z-50 h-[54px] w-full border-b border-blue-100 bg-[#f4f1ec] md:h-[80px]">
-      {/* === МОБИЛЕН ХЕДЪР === */}
       <div className="relative flex size-full items-center justify-between px-4 lg:hidden">
         <img
           src="/badge-1994-cleaned.svg"
@@ -250,9 +300,7 @@ export default function Header() {
         </div>
       </div>
 
-      {/* === ДЕСКТОП ХЕДЪР === */}
       <div className="mx-auto hidden size-full max-w-screen-xl items-center justify-between px-4 lg:flex">
-        {/* ЛОГО + СОЦИАЛКИ ВЛЯВО */}
         <div className="flex items-center gap-4">
           <Link href="/" aria-label="Home" className="ml-[-100px]">
             <Image
@@ -295,9 +343,7 @@ export default function Header() {
             </Link>
           </div>
         </div>
-
-        {/* НАВИГАЦИЯ */}
-        <nav className="mx-auto flex gap-3 md:gap-4">
+        <nav className="mx-auto flex gap-6 md:gap-8">
           {navLinks.map(({ key, path }) => {
             const href = currentLang === "bg" ? path : `/${currentLang}${path}`;
             return (
@@ -312,7 +358,6 @@ export default function Header() {
           })}
         </nav>
 
-        {/* ЕЗИЦИ ВДЯСНО + ERMA Al бутон */}
         <div className="flex items-center gap-[6px]">
           {languages.map(({ code, label }) => (
             <Link key={code} href={code === "bg" ? "/" : `/${code}`}>
@@ -331,15 +376,15 @@ export default function Header() {
               onClick={() => setChatOpen(!chatOpen)}
               className="flex size-10 animate-pulse items-center justify-center rounded-full bg-gradient-to-r from-blue-300 to-blue-400 text-[10px] text-white shadow-lg hover:from-blue-400 hover:to-blue-500"
             >
-              ERMA Al
+              ERMA AI
             </button>
             {chatOpen && (
               <div className="absolute right-0 top-[50px] z-[999] w-[90vw] max-w-[400px] rounded-xl border border-blue-100 bg-white p-4 shadow-md">
                 <div className="mb-4 flex items-center justify-between border-b p-2 shadow-sm">
                   <h3 className="text-lg font-semibold text-blue-900">
-                    {currentLang === "bg" && "Питай ERMA Al за проекта си"}
-                    {currentLang === "en" && "Ask ERMA Al about your project"}
-                    {currentLang === "de" && "Frage ERMA Al zu deinem Projekt"}
+                    {currentLang === "bg" && "Питай ERMA AI за проекта си"}
+                    {currentLang === "en" && "Ask ERMA AI about your project"}
+                    {currentLang === "de" && "Frage ERMA AI zu deinem Projekt"}
                   </h3>
                   <button
                     onClick={() => setChatOpen(false)}
@@ -356,7 +401,7 @@ export default function Header() {
                 <div className="mb-4">
                   <div
                     ref={chatContainerRef}
-                    className="h-[300px] space-y-3 overflow-y-auto scroll-smooth rounded border bg-gray-50 p-3 pr-2"
+                    className="chat-container-wrapper h-[300px] space-y-3 overflow-y-auto scroll-smooth rounded border bg-gray-50 p-3 pr-2"
                   >
                     {messages.map((msg, index) => (
                       <div
@@ -366,7 +411,7 @@ export default function Header() {
                         }`}
                       >
                         <div
-                          className={`max-w-[75%] rounded-lg px-4 py-2 text-sm ${
+                          className={`chat-message rounded-lg px-4 py-2 text-sm ${
                             msg.role === "user"
                               ? "bg-blue-100 text-right text-blue-900"
                               : "bg-gray-100 text-gray-900"
@@ -379,15 +424,43 @@ export default function Header() {
                                 : currentLang === "en"
                                   ? "You:"
                                   : "Du:"
-                              : "ERMA Al:"}
+                              : "ERMA AI:"}
                           </p>
                           <p>{msg.content}</p>
+                          {msg.files && msg.files.length > 0 && (
+                            <div className="mt-2 flex flex-wrap gap-2">
+                              {msg.files.map((file, fileIdx) => (
+                                <div key={fileIdx}>
+                                  {file.name.match(/\.(jpg|jpeg|png)$/i) ? (
+                                    <img
+                                      src={file.url}
+                                      alt={file.name}
+                                      className="rounded-lg"
+                                    />
+                                  ) : (
+                                    <a
+                                      href={file.url}
+                                      download={file.name}
+                                      className="text-sm text-blue-600 underline hover:text-blue-800"
+                                    >
+                                      {file.name}
+                                    </a>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          {msg.preview && (
+                            <span className="mt-1 block text-xs text-yellow-400">
+                              (Преглед, не е изпратен)
+                            </span>
+                          )}
                         </div>
                       </div>
                     ))}
                     {status === "sending" && (
                       <div className="flex justify-start">
-                        <div className="max-w-[75%] rounded-lg bg-gray-100 px-4 py-2 text-sm text-gray-900">
+                        <div className="chat-message rounded-lg bg-gray-100 px-4 py-2 text-sm text-gray-900">
                           {currentLang === "bg"
                             ? "Мисли..."
                             : currentLang === "en"
@@ -408,9 +481,11 @@ export default function Header() {
                     accept=".pdf,.docx,.jpg,.jpeg,.png"
                     onChange={handleFileChange}
                     className="w-full rounded border p-2 text-sm"
+                    multiple
                   />
                   <div className="flex items-center gap-2">
                     <textarea
+                      ref={textareaRef}
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
                       placeholder={
@@ -420,7 +495,7 @@ export default function Header() {
                             ? "Ask a question or describe your project..."
                             : "Stelle eine Frage oder beschreibe dein Projekt..."
                       }
-                      className="h-12 w-full resize-none rounded-lg border border-blue-200 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      className="chat-textarea w-full border border-blue-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
                       disabled={status === "sending"}
                     />
                     <button

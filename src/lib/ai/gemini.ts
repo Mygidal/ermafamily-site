@@ -1,5 +1,3 @@
-// src/lib/ai/gemini.ts
-
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || "";
 
 export async function askGeminiFromText(
@@ -11,7 +9,6 @@ export async function askGeminiFromText(
     return "Настъпи вътрешна грешка: няма конфигуриран AI ключ.";
   }
 
-  // Основен prompt с информация за ERMA
   const fullPrompt = `
 Ти си ERMA AI – дигитален асистент на строителна фирма ЕРМА – ФАМИЛНА ООД.
 Фирмата е основана през 1994 г. от Цветанка Стоилова Йовева – вдъхновена от своя баща Стоил Трендафилов, майстор и строител.
@@ -43,6 +40,26 @@ export async function askGeminiFromText(
   `.trim();
 
   try {
+    const parts: (
+      | { text: string }
+      | { inlineData: { mimeType: string; data: string } }
+    )[] = [{ text: fullPrompt }];
+
+    if (contextText && contextText.startsWith("data:image/")) {
+      parts.push({
+        inlineData: {
+          mimeType: contextText.split(";")[0].replace("data:", ""),
+          data: contextText.split(",")[1],
+        },
+      });
+    } else {
+      parts.push({
+        text: contextText || "Отговаряй на български, кратко и професионално.",
+      });
+    }
+
+    parts.push({ text: `Въпрос: ${prompt}` });
+
     const res = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${GEMINI_API_KEY}`,
       {
@@ -52,15 +69,7 @@ export async function askGeminiFromText(
           contents: [
             {
               role: "user",
-              parts: [
-                { text: fullPrompt },
-                {
-                  text:
-                    contextText ||
-                    "Отговаряй на български, кратко и професионално.",
-                },
-                { text: `Въпрос: ${prompt}` },
-              ],
+              parts,
             },
           ],
         }),

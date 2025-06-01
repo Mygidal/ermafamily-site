@@ -44,8 +44,8 @@ const navLabels = {
 };
 
 const navOrder = [
-  "",
-  "",
+  "bout",
+  "team",
   "services",
   "pricing",
   "gallery",

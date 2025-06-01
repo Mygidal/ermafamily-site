@@ -1,5 +1,7 @@
 ﻿"use client";
 
+import { useState } from "react";
+
 export default function ContactPage() {
   const contacts = [
     {
@@ -29,6 +31,31 @@ export default function ContactPage() {
     },
   ];
 
+  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    try {
+      const res = await fetch("/api/send-email", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (res.ok) {
+        setStatus("success");
+        form.reset();
+      } else {
+        setStatus("error");
+      }
+    } catch (err) {
+      console.error("Email error:", err);
+      setStatus("error");
+    }
+  };
+
   return (
     <div className="mx-auto max-w-screen-xl px-4 pb-10 pt-[100px]">
       {/* Заглавие */}
@@ -44,27 +71,34 @@ export default function ContactPage() {
       {/* Форма + Контактна информация */}
       <div className="mb-10 flex flex-col gap-8 lg:flex-row">
         {/* Форма */}
-        <form className="flex-1 space-y-4">
+        <form className="flex-1 space-y-4" onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <input
               type="text"
+              name="name"
               placeholder="Вашето име"
+              required
               className="w-full rounded border border-gray-300 px-4 py-2"
             />
             <input
               type="email"
+              name="email"
               placeholder="Вашият имейл"
+              required
               className="w-full rounded border border-gray-300 px-4 py-2"
             />
           </div>
           <input
             type="tel"
+            name="phone"
             placeholder="Телефон"
             className="w-full rounded border border-gray-300 px-4 py-2"
           />
           <textarea
+            name="message"
             placeholder="Съобщение"
             rows={5}
+            required
             className="w-full resize-none rounded border border-gray-300 px-4 py-2"
           />
           <button
@@ -73,6 +107,12 @@ export default function ContactPage() {
           >
             Изпрати
           </button>
+          {status === "success" && (
+            <p className="text-green-600">Изпратено успешно!</p>
+          )}
+          {status === "error" && (
+            <p className="text-red-600">Възникна грешка при изпращане.</p>
+          )}
         </form>
 
         {/* Инфо */}
@@ -153,7 +193,7 @@ export default function ContactPage() {
       {/* Карта */}
       <div className="mb-6 h-[300px] w-full overflow-hidden rounded-xl shadow-md">
         <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2933.3720703726787!2d23.254711615731854!3d42.67775557916617!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40aa9b2fe0506391%3A0x58036b9c19288a11!2z0KHQsNC00LDRgtGMINC60LvRltC60LDRgNC90LAgItCQ0LvQtdC90LAgNjkyLCDQodCw0LQ!5e0!3m2!1sbg!2sbg!4v1716900000000"
+          src="https://www.google.com/maps/embed?..."
           width="100%"
           height="100%"
           allowFullScreen
