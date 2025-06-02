@@ -36,29 +36,17 @@ export async function askGeminiFromText(
 - ориентировъчни цени
 - съвети за проекти
 - насоки за разрешителни
-- анализи от PDF файлове, JPG, DOCX и др.
+- анализи на предоставена информация
   `.trim();
 
   try {
-    const parts: (
-      | { text: string }
-      | { inlineData: { mimeType: string; data: string } }
-    )[] = [{ text: fullPrompt }];
-
-    if (contextText && contextText.startsWith("data:image/")) {
-      parts.push({
-        inlineData: {
-          mimeType: contextText.split(";")[0].replace("data:", ""),
-          data: contextText.split(",")[1],
-        },
-      });
-    } else {
-      parts.push({
+    const parts = [
+      { text: fullPrompt },
+      {
         text: contextText || "Отговаряй на български, кратко и професионално.",
-      });
-    }
-
-    parts.push({ text: `Въпрос: ${prompt}` });
+      },
+      { text: `Въпрос: ${prompt}` },
+    ];
 
     const res = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${GEMINI_API_KEY}`,
@@ -75,6 +63,11 @@ export async function askGeminiFromText(
         }),
       },
     );
+
+    if (!res.ok) {
+      console.error("❌ Грешка от Gemini API:", res.status);
+      return "Грешка при връзката с AI.";
+    }
 
     const data = await res.json();
     console.log("📦 Gemini raw response:", JSON.stringify(data, null, 2));

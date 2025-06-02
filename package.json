@@ -19,7 +19,6 @@
     "next": "15.3.2",
     "nodemailer": "^7.0.3",
     "openai": "^4.103.0",
-    "pdf-parse": "^1.1.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tesseract.js": "^6.0.1",

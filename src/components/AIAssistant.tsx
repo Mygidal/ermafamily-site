@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import AttachedFiles from "./AttachedFiles";
 
 type Message = {
   role: "user" | "assistant";
@@ -142,6 +143,24 @@ export default function AIAssistant({
       setStatus("error");
     }
   };
+  const handleRemoveFile = (index: number) => {
+    const updatedFiles = [...files];
+    const updatedPreviews = [...filePreviews];
+    updatedFiles.splice(index, 1);
+    updatedPreviews.splice(index, 1);
+    setFiles(updatedFiles);
+    setFilePreviews(updatedPreviews);
+
+    if (updatedFiles.length === 0 && !question.trim()) {
+      setMessages((prev) => prev.filter((msg) => !msg.preview));
+    } else {
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.preview ? { ...msg, files: updatedPreviews } : msg,
+        ),
+      );
+    }
+  };
 
   return (
     <div className="fixed inset-0 flex flex-col overflow-x-hidden bg-gradient-to-br from-blue-50 to-gray-100">
@@ -232,6 +251,7 @@ export default function AIAssistant({
             </div>
           ))}
         </div>
+        <AttachedFiles files={filePreviews} onRemove={handleRemoveFile} />
 
         <form
           onSubmit={handleAsk}
