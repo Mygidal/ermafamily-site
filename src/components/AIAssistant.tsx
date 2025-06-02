@@ -113,7 +113,10 @@ export default function AIAssistant({
         method: "POST",
         body: formData,
       });
-      const data = await res.json();
+      const text = await res.text();
+      console.log("📦 API RAW RESPONSE:", text);
+      const data = JSON.parse(text);
+
       if (res.ok) {
         setMessages((prev) => [
           ...prev,

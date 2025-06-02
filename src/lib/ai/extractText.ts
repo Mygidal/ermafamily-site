@@ -9,6 +9,10 @@ import Tesseract from "tesseract.js";
 console.log("🧠 extractText.ts зареден");
 
 export async function extractText(filePath: string): Promise<string> {
+  if (!filePath || typeof filePath !== "string") {
+    return "[Невалиден път до файл]";
+  }
+
   const ext = path.extname(filePath).toLowerCase();
 
   if (!fs.existsSync(filePath)) {

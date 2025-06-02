@@ -170,7 +170,7 @@ export default function Header() {
     const formData = new FormData();
     formData.append("question", userMessage.content);
     formData.append("lang", currentLang);
-    files.forEach((file, idx) => formData.append(`attachment_${idx}`, file));
+    files.forEach((file) => formData.append("attachment", file));
 
     try {
       const res = await fetch("/api/contact", {
