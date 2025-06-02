@@ -106,7 +106,7 @@ export default function AIAssistant({
     const formData = new FormData();
     formData.append("question", question || "Потребителят качи файлове.");
     formData.append("lang", lang);
-    files.forEach((file, idx) => formData.append(`attachment_${idx}`, file));
+    files.forEach((file) => formData.append("attachment", file));
 
     try {
       const res = await fetch("/api/contact", {
