@@ -13,12 +13,12 @@ export default function PriceCalculator() {
     message: "",
   });
   const [file, setFile] = useState<File | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null); // Добавяме за по-детайлна грешка
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setStatus("sending");
-    setErrorMessage(null); // Нулираме грешката преди нова заявка
+    setErrorMessage(null);
 
     const data = new FormData();
     data.append("name", formData.name);
@@ -33,7 +33,7 @@ export default function PriceCalculator() {
         body: data,
       });
 
-      const responseData = await res.json(); // Взимаме отговора за повече информация
+      const responseData = await res.json();
 
       if (res.ok) {
         setStatus("success");
@@ -66,19 +66,35 @@ export default function PriceCalculator() {
           <h3 className="mb-4 text-xl font-semibold">
             Ориентировъчни цени (лв.)
           </h3>
+
+          <h4 className="mb-1 mt-4 font-semibold">I. Кофражни работи</h4>
           <ul className="list-disc space-y-1 pl-5 text-sm text-gray-800">
-            <li>Груб строеж – от 500 лв./м²</li>
-            <li>Довършване до ключ: от 900 до 1200 лв./м²</li>
-            <li>Изкоп и извозване: около 60 лв./м³</li>
-            <li>Плоча + колони: около 400 лв./м²</li>
-            <li>HPL фасада: около 240 лв./м²</li>
+            <li>Фундаменти – 50.00 лв/м²</li>
+            <li>Вертикали – 58.00 лв/м²</li>
+            <li>Плочи – 55.00 лв/м²</li>
+            <li>Кофраж за стълбища – 80.00 лв/м²</li>
           </ul>
+
+          <h4 className="mb-1 mt-4 font-semibold">II. Арматурни работи</h4>
+          <ul className="list-disc space-y-1 pl-5 text-sm text-gray-800">
+            <li>Всички видове – 1.20 лв/кг</li>
+          </ul>
+
+          <h4 className="mb-1 mt-4 font-semibold">III. Бетонови работи</h4>
+          <ul className="list-disc space-y-1 pl-5 text-sm text-gray-800">
+            <li>Подложен бетон – 32.00 лв/м²</li>
+            <li>Фундаменти – 23.00 лв/м²</li>
+            <li>Плочи и стълбища – 30.00 лв/м²</li>
+            <li>Плочи, греди и др. – 32.00 лв/м²</li>
+            <li>Колони и шайби – 32.00 лв/м²</li>
+          </ul>
+
           <p className="mt-4 text-xs italic text-gray-500">
             Цените са ориентировъчни и подлежат на уточнение след оглед и среща.
           </p>
         </div>
 
-        {/* === БЛОК 3: ФОРМА === */}
+        {/* === БЛОК 2: ФОРМА === */}
         <div className="flex h-full min-h-[620px] flex-col justify-start rounded-lg border border-gray-200 bg-white p-6 shadow">
           <h3 className="mb-2 text-center text-lg font-bold text-blue-900">
             Запитване
