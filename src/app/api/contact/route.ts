@@ -1,22 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
-import { askGeminiFromText } from "@/lib/ai/gemini";
+import { askErmaAI } from "@/lib/ai/askErmaAI";
+import type { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
     const question = formData.get("question")?.toString() || "";
     const lang = formData.get("lang")?.toString() || "bg";
+    const historyRaw = formData.get("history")?.toString() || "[]";
 
-    const baseContext =
-      {
-        bg: "Отговаряй на български, кратко и професионално.",
-        en: "Respond in English, brief and professional.",
-        de: "Antworte auf Deutsch, kurz und professionell.",
-      }[lang] || "";
+    let history: ChatCompletionMessageParam[] = [];
+    try {
+      history = JSON.parse(historyRaw);
+      console.log("📨 Получена история в API:", history);
+    } catch (e) {
+      console.warn("⚠️ Историята не може да бъде парсната:", e);
+    }
 
-    const finalPrompt = [baseContext, question].filter(Boolean).join("\n\n");
-
-    const answer = await askGeminiFromText(finalPrompt, baseContext);
+    const answer = await askErmaAI(question, history); // автоматично избира GPT или Gemini
 
     return NextResponse.json({
       answer,

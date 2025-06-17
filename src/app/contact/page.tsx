@@ -4,11 +4,7 @@ import { useState } from "react";
 
 export default function ContactPage() {
   const contacts = [
-    {
-      name: "Цветанка Йовева",
-      role: "Управител",
-      phone: "+359 887 317 087",
-    },
+    { name: "Цветанка Йовева", role: "Управител", phone: "+359 887 317 087" },
     {
       name: "Еди Йовев",
       role: "Технически ръководител",
@@ -58,7 +54,6 @@ export default function ContactPage() {
 
   return (
     <div className="mx-auto max-w-screen-xl px-4 pb-10 pt-[100px]">
-      {/* Заглавие */}
       <div className="mb-8 text-center">
         <h1 className="font-montserrat mb-2 text-3xl font-bold text-blue-900 md:text-4xl">
           Свържете се с нас
@@ -68,102 +63,57 @@ export default function ContactPage() {
         </p>
       </div>
 
-      {/* Форма + Контактна информация */}
-      <div className="mb-10 flex flex-col gap-8 lg:flex-row">
+      <div className="mb-6 flex flex-col gap-8 lg:flex-row">
         {/* Форма */}
-        <form className="flex-1 space-y-4" onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <input
-              type="text"
-              name="name"
-              placeholder="Вашето име"
-              required
-              className="w-full rounded border border-gray-300 px-4 py-2"
-            />
-            <input
-              type="email"
-              name="email"
-              placeholder="Вашият имейл"
-              required
-              className="w-full rounded border border-gray-300 px-4 py-2"
-            />
-          </div>
-          <input
-            type="tel"
-            name="phone"
-            placeholder="Телефон"
-            className="w-full rounded border border-gray-300 px-4 py-2"
-          />
-          <textarea
-            name="message"
-            placeholder="Съобщение"
-            rows={5}
-            required
-            className="w-full resize-none rounded border border-gray-300 px-4 py-2"
-          />
-          <button
-            type="submit"
-            className="rounded-full bg-blue-900 px-6 py-2 text-white transition hover:bg-blue-800"
-          >
-            Изпрати
-          </button>
-          {status === "success" && (
-            <p className="text-green-600">Изпратено успешно!</p>
-          )}
-          {status === "error" && (
-            <p className="text-red-600">Възникна грешка при изпращане.</p>
-          )}
-        </form>
-
-        {/* Инфо */}
-        <div className="flex-1 space-y-4 text-sm text-gray-700">
-          <div>
-            <h3 className="text-base font-bold text-blue-900">Адрес</h3>
-            <a
-              href="https://www.google.bg/maps/place/кв.+Овча+купел,+ул.+„692-ра“+12,+1618+София/@42.6777594,23.2508653,799m"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-800 hover:underline"
-            >
-              София, кв. „Овча купел“, ул. 692, №12
-            </a>
-          </div>
-
-          <div>
-            <h3 className="text-base font-bold text-blue-900">Имейл</h3>
-            <p>
-              <a
-                href="mailto:team@ermafamily.com"
-                className="text-blue-800 hover:underline"
-              >
-                team@ermafamily.com
-              </a>
-            </p>
-          </div>
-
-          <div className="mt-2 flex gap-4">
-            <a
-              href="https://www.facebook.com/profile.php?id=61564031771496"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img src="/icon-facebook.png" alt="Facebook" className="size-6" />
-            </a>
-            <a
-              href="https://www.instagram.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img
-                src="/icon-instagram.png"
-                alt="Instagram"
-                className="size-6"
+        <div className="flex-1 space-y-6">
+          <form className="space-y-4" onSubmit={handleSubmit}>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <input
+                type="text"
+                name="name"
+                placeholder="Вашето име"
+                required
+                className="w-full rounded border border-gray-300 px-4 py-2"
               />
-            </a>
-          </div>
+              <input
+                type="email"
+                name="email"
+                placeholder="Вашият имейл"
+                required
+                className="w-full rounded border border-gray-300 px-4 py-2"
+              />
+            </div>
+            <input
+              type="tel"
+              name="phone"
+              placeholder="Телефон"
+              className="w-full rounded border border-gray-300 px-4 py-2"
+            />
+            <textarea
+              name="message"
+              placeholder="Съобщение"
+              rows={5}
+              required
+              className="w-full resize-none rounded border border-gray-300 px-4 py-2"
+            />
+            <button
+              type="submit"
+              className="rounded-full bg-blue-900 px-6 py-2 text-white transition hover:bg-blue-800"
+            >
+              Изпрати
+            </button>
+            {status === "success" && (
+              <p className="text-green-600">Изпратено успешно!</p>
+            )}
+            {status === "error" && (
+              <p className="text-red-600">Възникна грешка при изпращане.</p>
+            )}
+          </form>
+        </div>
 
-          {/* Подредени телефони */}
-          <div className="mt-6 space-y-4">
+        {/* Контакти по отдели + Адрес и имейл вдясно */}
+        <div className="flex-1 space-y-6 text-sm text-gray-700">
+          <div className="space-y-4">
             <h3 className="text-base font-bold text-blue-900">
               Контакти по отдели
             </h3>
@@ -187,13 +137,42 @@ export default function ContactPage() {
               ))}
             </div>
           </div>
+
+          {/* Адрес и имейл под контактите – само за десктоп */}
+          <div className="hidden justify-between gap-12 pt-2 text-sm text-gray-700 lg:flex">
+            <div>
+              <h3 className="text-base font-bold text-blue-900">Адрес</h3>
+              <a
+                href="https://www.google.bg/maps/place/кв.+Овча+купел,+ул.+„692-ра“+12,+1618+София/@42.6777594,23.2508653,799m"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-800 hover:underline"
+              >
+                София, кв. „Овча купел“, ул. 692, №12
+              </a>
+            </div>
+            <div>
+              <h3 className="text-base font-bold text-blue-900">Имейл</h3>
+              <a
+                href="mailto:team@ermafamily.com"
+                className="text-blue-800 hover:underline"
+              >
+                team@ermafamily.com
+              </a>
+            </div>
+          </div>
+
+          {/* Скрит бутон за файлове */}
+          <div className="hidden">
+            <label htmlFor="fileInput">Избор на файлове</label>
+            <input type="file" id="fileInput" />
+          </div>
         </div>
       </div>
 
-      {/* Карта */}
       <div className="mb-6 h-[300px] w-full overflow-hidden rounded-xl shadow-md">
         <iframe
-          src="https://www.google.com/maps/embed?..."
+          src="https://maps.google.com/maps?q=42.677105,23.255564&z=17&output=embed"
           width="100%"
           height="100%"
           allowFullScreen
@@ -202,7 +181,6 @@ export default function ContactPage() {
         ></iframe>
       </div>
 
-      {/* Бутон "Как да стигна" */}
       <div className="mb-10 text-center">
         <a
           href="https://www.google.com/maps/dir/?api=1&destination=София,+ул.+692,+Овча+купел"
@@ -214,7 +192,6 @@ export default function ContactPage() {
         </a>
       </div>
 
-      {/* Работно време */}
       <div className="text-center text-sm text-gray-600">
         <p className="font-semibold text-blue-900">Работно време:</p>
         <p>Понеделник – Петък: 09:00 – 18:00</p>

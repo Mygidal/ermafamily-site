@@ -108,8 +108,19 @@ export default function AIAssistant({
     formData.append("question", question || "Потребителят качи файлове.");
     formData.append("lang", lang);
     files.forEach((file) => formData.append("attachment", file));
+    // 🧠 Добавяме историята (без preview)
+    const history = messages
+      .filter((msg) => !msg.preview)
+      .slice(-10)
+      .map((msg) => ({
+        role: msg.role,
+        content: msg.content,
+      }));
 
+    formData.append("history", JSON.stringify(history));
     try {
+      console.log("📜 Изпращаме история към API:", messages);
+
       const res = await fetch("/api/contact", {
         method: "POST",
         body: formData,
@@ -265,32 +276,37 @@ export default function AIAssistant({
             id="attachFile"
             multiple
           />
-          <label
-            htmlFor="attachFile"
-            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-gray-200 text-gray-600 hover:bg-gray-300"
-            title={
-              lang === "bg"
-                ? "Прикачи файл"
-                : lang === "de"
-                  ? "Datei anhängen"
-                  : "Attach file"
-            }
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.586-6.586a4 4 0 10-5.656-5.656L4.344 9.929"
-              />
-            </svg>
-          </label>
+          {false && (
+            <>
+              <label
+                htmlFor="attachFile"
+                className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-gray-200 text-gray-600 hover:bg-gray-300"
+                title={
+                  lang === "bg"
+                    ? "Прикачи файл"
+                    : lang === "de"
+                      ? "Datei anhängen"
+                      : "Attach file"
+                }
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.586-6.586a4 4 0 10-5.656-5.656L4.344 9.929"
+                  />
+                </svg>
+              </label>
+            </>
+          )}
+
           <textarea
             ref={textareaRef}
             placeholder={

@@ -480,9 +480,10 @@ export default function Header() {
                     name="attachment"
                     accept=".pdf,.docx,.jpg,.jpeg,.png"
                     onChange={handleFileChange}
-                    className="w-full rounded border p-2 text-sm"
+                    className="hidden"
                     multiple
                   />
+
                   <div className="flex items-center gap-2">
                     <textarea
                       ref={textareaRef}
