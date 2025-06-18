@@ -1,5 +1,6 @@
 import { askGeminiFromText } from "./gemini";
-import { askGPTFromText as askOpenAIFromText, getSystemPrompt } from "./openai";
+import { askGPTFromText as askOpenAIFromText } from "./openai";
+import { getRelevantKnowledge } from "./getRelevantKnowledge";
 import type { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 
 export type AIModel = "gemini" | "gpt";
@@ -27,9 +28,9 @@ export async function askErmaAI(
 ): Promise<string> {
   const selectedModel = model || detectIfVisual(prompt, files);
   console.log("🤖 Избран AI модел:", selectedModel);
-  console.log("📥 История, подадена към askErmaAI:", contextTextOrHistory);
 
   const lang = detectLanguageInstruction(prompt);
+
   const langPrefix =
     lang === "bg"
       ? "Отговаряй на български, кратко и професионално."
@@ -39,38 +40,39 @@ export async function askErmaAI(
           ? "请用中文简洁而专业地回答。"
           : lang === "en"
             ? "Respond in English, brief and professional."
-            : typeof contextTextOrHistory === "string"
-              ? contextTextOrHistory
-              : "";
+            : "";
 
-  const systemMessage: ChatCompletionMessageParam = {
+  const contextParts = getRelevantKnowledge(prompt);
+  console.log("📦 Вмъкнат контекст:", contextParts);
+  console.log(
+    "🧠 Дължина на контекста (в символи):",
+    contextParts.join("\n\n").length,
+  );
+
+  const systemPrompt: ChatCompletionMessageParam = {
     role: "system",
-    content: getSystemPrompt().content + "\n\n" + langPrefix,
+    content: contextParts.join("\n\n") + "\n\n" + langPrefix,
   };
 
   if (Array.isArray(contextTextOrHistory)) {
     const limitedHistory = contextTextOrHistory.slice(-10);
     const messages: ChatCompletionMessageParam[] = [
-      systemMessage,
+      systemPrompt,
       ...limitedHistory,
       { role: "user", content: prompt },
     ];
 
-    if (selectedModel === "gemini") {
-      return await askGeminiFromText(messages);
-    }
-
-    return await askOpenAIFromText(messages);
+    return selectedModel === "gemini"
+      ? await askGeminiFromText(messages)
+      : await askOpenAIFromText(messages);
   } else {
     const messages: ChatCompletionMessageParam[] = [
-      systemMessage,
+      systemPrompt,
       { role: "user", content: prompt },
     ];
 
-    if (selectedModel === "gemini") {
-      return await askGeminiFromText(messages);
-    }
-
-    return await askOpenAIFromText(messages);
+    return selectedModel === "gemini"
+      ? await askGeminiFromText(messages)
+      : await askOpenAIFromText(messages);
   }
 }

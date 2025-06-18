@@ -1,4 +1,5 @@
-import { ermaKnowledgeBase } from "../../../data/ermaKnowledgeBase";
+import { ermaKnowledgeBase } from "../../data/ermaKnowledgeBase";
+
 import type { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || "";
@@ -12,6 +13,7 @@ export async function askGeminiFromText(
     return "Настъпи вътрешна грешка: няма конфигуриран AI ключ.";
   }
 
+  // Основен системен prompt + инструкции + знания
   const basePrompt = `
 You must always detect and respond in the same language as the user's input.
 
@@ -26,7 +28,7 @@ You must always detect and respond in the same language as the user's input.
 - If the input is in Chinese characters, respond in Chinese.
 - If the input is in Latin script, respond in English (unless otherwise implied).
 - If the input is short — respond in the language of the input.
-
+- If the user does not repeat the square footage (РЗП) in future questions, use the last known value from earlier messages. Do not ask again.
 
 Once the language is known, respond in it automatically and consistently.
 Never explain this behavior to the user.
@@ -34,23 +36,41 @@ Never explain this behavior to the user.
 ${ermaKnowledgeBase}
   `.trim();
 
-  let parts;
+  // Сглобяване на контекста за Gemini API
+  let contents;
 
   if (typeof promptOrMessages === "string") {
-    parts = [
-      { text: basePrompt },
+    contents = [
       {
-        text:
-          contextText ||
-          "Answer concisely and professionally in the same language as the question.",
+        role: "model",
+        parts: [{ text: basePrompt }],
       },
-      { text: `Въпрос: ${promptOrMessages}` },
+      {
+        role: "user",
+        parts: [
+          {
+            text:
+              contextText ||
+              "Answer concisely and professionally in the same language as the question.",
+          },
+          { text: `Въпрос: ${promptOrMessages}` },
+        ],
+      },
     ];
   } else {
-    const historyParts = promptOrMessages.map((msg) => ({ text: msg.content }));
-    parts = [{ text: basePrompt }, ...historyParts];
+    contents = [
+      {
+        role: "model",
+        parts: [{ text: basePrompt }],
+      },
+      ...promptOrMessages.map((msg) => ({
+        role: msg.role === "assistant" ? "model" : "user",
+        parts: [{ text: msg.content }],
+      })),
+    ];
   }
-  console.log("🧠 Подадени части към Gemini:", parts);
+
+  console.log("🧠 Подадени части към Gemini:", contents);
 
   try {
     const res = await fetch(
@@ -58,14 +78,7 @@ ${ermaKnowledgeBase}
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [
-            {
-              role: "user",
-              parts,
-            },
-          ],
-        }),
+        body: JSON.stringify({ contents }),
       },
     );
 

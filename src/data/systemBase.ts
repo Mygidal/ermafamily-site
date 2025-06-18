@@ -1,37 +1,4 @@
-import { OpenAI } from "openai";
-import type { ChatCompletionMessageParam } from "openai/resources/chat/completions";
-import { ermaKnowledgeBase } from "../../data/ermaKnowledgeBase";
-
-const apiKey = process.env.OPENAI_API_KEY;
-
-if (!apiKey) {
-  const error = "Не е зададен OPENAI_API_KEY в средата.";
-  console.error(error);
-  throw new Error(error);
-}
-
-const openai = new OpenAI({
-  apiKey,
-});
-
-export async function askGPTFromText(
-  messages: ChatCompletionMessageParam[],
-): Promise<string> {
-  console.log("🧠 Подадени messages към GPT:", messages);
-
-  const completion = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
-    messages: [getSystemPrompt(), ...messages],
-    temperature: 0.3,
-  });
-
-  return completion.choices[0].message.content || "";
-}
-
-export function getSystemPrompt(): ChatCompletionMessageParam {
-  return {
-    role: "system",
-    content: `
+export const systemBase = `
 You must always detect and respond in the same language as the user's input.
 
 - Do not ask what language to continue in.
@@ -48,9 +15,4 @@ You must always detect and respond in the same language as the user's input.
 - If the user does not repeat the square footage (РЗП) in future questions, use the last known value from earlier messages. Do not ask again.
 
 Once the language is known, respond in it automatically and consistently.
-Never explain this behavior to the user.
-
-${ermaKnowledgeBase}
-    `.trim(),
-  };
-}
+Never explain this behavior to the user.`.trim();
